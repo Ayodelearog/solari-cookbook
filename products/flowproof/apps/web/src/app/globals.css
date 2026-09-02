@@ -7,6 +7,10 @@
   --accent: #155f3d;
   --accent-strong: #0d472c;
   --accent-soft: #dff3e7;
+  --danger: #a12d27;
+  --danger-soft: #fae5e3;
+  --uncertain: #765813;
+  --uncertain-soft: #f7edcb;
   --focus: #2563eb;
 }
 
@@ -75,6 +79,19 @@ a:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
 }
 .problem h2 { max-width: 440px; font-size: clamp(2rem, 4vw, 3.5rem); letter-spacing: -0.045em; }
 .problem > p { color: var(--muted); font-size: 1.1rem; line-height: 1.7; }
+.evidenceSection { max-width: 1120px; margin: 0 auto 64px; padding: 24px; }
+.sectionIntro { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 48px; align-items: end; margin-bottom: 28px; }
+.sectionIntro h2 { margin-bottom: 0; font-size: clamp(2.2rem, 5vw, 4.2rem); letter-spacing: -0.055em; line-height: 1; }
+.sectionIntro > p { margin-bottom: 4px; color: var(--muted); line-height: 1.65; }
+.outcomeGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.outcomeCard { display: flex; flex-direction: column; min-height: 330px; padding: 24px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+.cardHeading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 34px; color: var(--muted); font-size: 0.82rem; }
+.outcomeCard h3 { margin-bottom: 12px; font-size: 1.4rem; letter-spacing: -0.035em; }
+.outcomeCard > p { color: var(--muted); line-height: 1.55; }
+.outcomeCard dl { display: grid; gap: 14px; margin: auto 0 22px; }
+.outcomeCard dl div { display: grid; gap: 4px; }
+.outcomeCard dd { overflow-wrap: anywhere; font-size: 0.88rem; }
+.outcomeCard > a { color: var(--accent); font-size: 0.9rem; font-weight: 700; text-underline-offset: 4px; }
 .runSection {
   max-width: 1120px;
   margin: 0 auto 96px;
@@ -94,12 +111,15 @@ a:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
   font-weight: 800;
   letter-spacing: 0.08em;
 }
+.status[data-outcome="FAIL"] { color: var(--danger); background: var(--danger-soft); }
+.status[data-outcome="INCONCLUSIVE"] { color: var(--uncertain); background: var(--uncertain-soft); }
 .runSummary { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; padding-bottom: 36px; }
 .runSummary dl { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 0; }
 .runSummary dl div { display: flex; flex-direction: column; gap: 5px; }
 dt { color: var(--muted); font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.08em; }
 dd { margin: 0; font-weight: 650; }
 .runSummary > p { color: var(--muted); line-height: 1.6; }
+.reportGrid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 0.72fr); gap: 32px; align-items: start; }
 .timeline { padding: 0; margin: 0; list-style: none; border-top: 1px solid var(--line); }
 .timeline li { display: grid; grid-template-columns: 36px 1fr auto; gap: 16px; align-items: start; padding: 24px 0; border-bottom: 1px solid var(--line); }
 .stepIndex { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--accent-soft); color: var(--accent-strong); font-weight: 750; }
@@ -108,10 +128,15 @@ dd { margin: 0; font-weight: 650; }
 .stepTitle span, .stepBody p, .stepStatus, .disclosure { color: var(--muted); font-size: 0.9rem; }
 .stepBody p { margin-bottom: 0; }
 .stepStatus { color: var(--accent); font-weight: 700; }
+.evidenceFigure { margin: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 12px; background: var(--canvas); }
+.evidenceFigure img { display: block; width: 100%; height: auto; }
+.evidenceFigure figcaption { padding: 12px 14px; color: var(--muted); font-size: 0.8rem; line-height: 1.4; }
 .disclosure { margin: 24px 0 0; line-height: 1.55; }
 @media (max-width: 720px) {
   .hero { padding-top: 64px; padding-bottom: 80px; }
-  .problem, .runSummary { grid-template-columns: 1fr; gap: 20px; }
+  .problem, .sectionIntro, .runSummary, .reportGrid { grid-template-columns: 1fr; gap: 20px; }
+  .outcomeGrid { grid-template-columns: 1fr; }
+  .outcomeCard { min-height: 290px; }
   .runSection { margin-inline: 16px; padding: 28px 20px; }
   .sectionHeading { flex-direction: column-reverse; gap: 12px; }
   .runSummary dl { grid-template-columns: 1fr; }

@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "1",
+  "scenario": "fail",
+  "journey": "Purchase path reaches a cart with the selected product",
+  "targetUrl": "https://www.saucedemo.com/",
+  "sessionId": "ip-10-0-11-65:81ebf8b5-4973-4de8-8d32-6d535bc220f2:cmtkbl70200bwo4012gzfeph8:1788368872096.aThCt_cK4efoI8clSmcMuA",
+  "startedAt": "2026-09-02T17:07:50.742Z",
+  "completedAt": "2026-09-02T17:07:57.951Z",
+  "outcome": "FAIL",
+  "failureType": "PRODUCT_ASSERTION",
+  "summary": "Expected Sauce Labs Fleece Jacket after refresh, observed Sauce Labs Backpack.",
+  "steps": [
+    {
+      "id": "open",
+      "intent": "Open the storefront",
+      "status": "passed",
+      "durationMs": 720,
+      "observed": "The login action is visible."
+    },
+    {
+      "id": "authenticate",
+      "intent": "Sign in with a synthetic customer",
+      "status": "passed",
+      "durationMs": 1121,
+      "observed": "The product inventory is visible after authentication."
+    },
+    {
+      "id": "add-product",
+      "intent": "Add the expected product to the cart",
+      "status": "passed",
+      "durationMs": 816,
+      "observed": "The cart badge reports one product."
+    },
+    {
+      "id": "verify-cart",
+      "intent": "Verify the selected product persists",
+      "status": "failed",
+      "durationMs": 905,
+      "observed": "Expected Sauce Labs Fleece Jacket after refresh, observed Sauce Labs Backpack."
+    }
+  ]
+}

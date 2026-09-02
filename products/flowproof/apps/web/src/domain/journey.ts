@@ -3,6 +3,13 @@ import { z } from "zod";
 export const journeyOutcomeSchema = z.enum(["PASS", "FAIL", "INCONCLUSIVE"]);
 export type JourneyOutcome = z.infer<typeof journeyOutcomeSchema>;
 
+export const failureTypeSchema = z.enum([
+  "PRODUCT_ASSERTION",
+  "THIRD_PARTY",
+  "RUNNER_INFRASTRUCTURE",
+  "UNKNOWN",
+]);
+
 export const journeySpecSchema = z.object({
   schemaVersion: z.literal("1"),
   name: z.string().min(1),
@@ -39,11 +46,35 @@ export type StepResult = {
 
 export type JourneyRun = {
   id: string;
+  scenario: "pass" | "fail" | "inconclusive";
   journeyName: string;
   environment: string;
   outcome: JourneyOutcome;
+  failureType?: z.infer<typeof failureTypeSchema>;
   startedAt: string;
   durationMs: number;
   summary: string;
+  evidenceImage: string;
   steps: StepResult[];
 };
+
+export const liveRunArtifactSchema = z.object({
+  schemaVersion: z.literal("1"),
+  scenario: z.enum(["pass", "fail", "inconclusive"]),
+  journey: z.string().min(1),
+  targetUrl: z.string().url(),
+  startedAt: z.string().datetime(),
+  completedAt: z.string().datetime(),
+  outcome: journeyOutcomeSchema,
+  failureType: failureTypeSchema.optional(),
+  summary: z.string().min(1),
+  steps: z.array(z.object({
+    id: z.string().min(1),
+    intent: z.string().min(1),
+    status: z.enum(["passed", "failed"]),
+    durationMs: z.number().int().nonnegative(),
+    observed: z.string().min(1),
+  })).min(1),
+});
+
+export type LiveRunArtifact = z.infer<typeof liveRunArtifactSchema>;

@@ -75,8 +75,8 @@ explicitly require the entire business product to remain inside that fork.
 
 - [x] A real Solari browser runs the reference journey.
 - [x] Session and runner are closed in `finally`.
-- [ ] PASS, FAIL, and INCONCLUSIVE are demonstrated accurately.
-- [ ] At least one controlled regression is caught.
+- [x] PASS, FAIL, and INCONCLUSIVE are demonstrated accurately.
+- [x] At least one controlled regression is caught.
 - [x] Evidence excludes secrets and sensitive input.
 - [x] Run cost, duration, and limitations are documented.
 
@@ -103,14 +103,16 @@ explicitly require the entire business product to remain inside that fork.
 ## Status today
 
 - Product strategy and architecture: started.
-- Next.js report shell and journey contract: started with fixtures.
+- Next.js report shell: reads and validates the three sanitized live Solari
+  artifacts; fixture-only disclosure has been removed.
 - Actual GitHub fork: created at https://github.com/Ayodelearog/solari-cookbook.
 - Live Solari runner: verified on 2026-09-02. The four-step SauceDemo journey
   returned `PASS`; Solari marked the browser session `completed` after eight
   seconds and showed nine browser-seconds of usage, rounded to `$0.00`.
-- Live evidence: sanitized `artifacts/run.json` and `artifacts/final-state.png`
-  are stored with the runnable example. This proves the PASS path only; FAIL,
-  INCONCLUSIVE, and controlled-regression demonstrations remain outstanding.
+- Live evidence: sanitized results and screenshots for PASS, controlled FAIL,
+  and INCONCLUSIVE are stored under `artifacts/<scenario>/`. The FAIL scenario
+  deliberately expects the wrong product; it is diagnostic evidence, not a
+  claim that SauceDemo has a real regression.
 - Public deployment: not created.
 - Customer proof: not collected.
 - Public tagged post: not published.

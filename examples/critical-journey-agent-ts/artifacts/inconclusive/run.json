@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "1",
+  "scenario": "inconclusive",
+  "journey": "Purchase path reaches a cart with the selected product",
+  "targetUrl": "https://unavailable.flowproof.invalid/",
+  "sessionId": "ip-10-0-11-65:34ca6737-93dd-41c7-be42-1878ef7197d9:cmtkbl70200bwo4012gzfeph8:1788368880869.iuCl0dyiFxPvM6D8UkYrag",
+  "startedAt": "2026-09-02T17:07:59.587Z",
+  "completedAt": "2026-09-02T17:08:03.324Z",
+  "outcome": "INCONCLUSIVE",
+  "failureType": "THIRD_PARTY",
+  "summary": "The synthetic target could not be reached, so the product outcome is unknown.",
+  "steps": [
+    {
+      "id": "open",
+      "intent": "Open the storefront",
+      "status": "failed",
+      "durationMs": 271,
+      "observed": "The synthetic target could not be reached, so the product outcome is unknown."
+    }
+  ]
+}

@@ -23,7 +23,22 @@ export SOLARI_API_KEY=slr_live_...
 npm start
 ```
 
-The command writes a structured result and final screenshot to `artifacts/`.
+The default command runs the PASS scenario. Two explicit diagnostic scenarios
+exercise the failure taxonomy:
+
+```bash
+FLOWPROOF_SCENARIO=fail npm start
+FLOWPROOF_SCENARIO=inconclusive npm start
+```
+
+`fail` deliberately expects a different product after refresh, proving that a
+business assertion mismatch becomes `FAIL`. `inconclusive` uses the reserved
+`.invalid` domain to prove that an unavailable target becomes `INCONCLUSIVE`
+instead of a false product alarm. Both diagnostic commands exit non-zero by
+design.
+
+Each command writes a structured result and final screenshot to
+`artifacts/<scenario>/`.
 Recording is disabled by default because it may capture typed values.
 
 `PASS` means only that the declared assertions passed during this run. Network,
@@ -34,18 +49,18 @@ The public target proves the Solari execution contract. Paying customers use an
 approved test environment, encrypted secret references, versioned journeys,
 scheduled runs, retention controls, and human-reviewed changes.
 
-## Verified reference run
+## Verified reference runs
 
-The checked-in evidence was produced by a real Solari cloud browser on
-2026-09-02. All four declared steps passed, including confirmation that the
-selected product remained in the cart after refresh. Solari reported the
-session as `completed` with an eight-second session duration, nine browser-seconds
-of metered usage, and no active instance left running. The console rounded the
-cost of this short run to `$0.00`.
+The checked-in evidence was produced by real Solari cloud browsers on
+2026-09-02. The PASS run completed all four declared steps. The controlled FAIL
+run caught the deliberate product mismatch. The INCONCLUSIVE run withheld a
+product verdict when the reserved target could not be reached. Solari reported
+all sessions completed with no active instance left running.
 
-- `artifacts/run.json` contains the sanitized, step-level result.
-- `artifacts/final-state.png` shows the final cart state.
+- `artifacts/pass/` contains the successful journey evidence.
+- `artifacts/fail/` contains the controlled assertion-regression evidence.
+- `artifacts/inconclusive/` contains the unavailable-target evidence.
 
-These artifacts demonstrate the reference PASS path, not general product
-reliability. Controlled FAIL and INCONCLUSIVE demonstrations are still required
-before the challenge submission is complete.
+These artifacts demonstrate classification behavior, not general product
+reliability. The FAIL case is deliberately injected and must not be represented
+as a real SauceDemo incident.

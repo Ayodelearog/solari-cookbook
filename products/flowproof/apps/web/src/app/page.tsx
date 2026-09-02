@@ -1,13 +1,22 @@
-import { demoRun } from "@/domain/demo-run";
+import Image from "next/image";
+import { liveRuns } from "@/domain/live-runs";
 
 const formatDuration = (milliseconds: number) => `${(milliseconds / 1000).toFixed(1)}s`;
+const formatTimestamp = (timestamp: string) => new Intl.DateTimeFormat("en", {
+  dateStyle: "medium",
+  timeStyle: "short",
+  timeZone: "UTC",
+}).format(new Date(timestamp));
 
 export default function Home() {
+  const passRun = liveRuns.find((run) => run.outcome === "PASS");
+  if (!passRun) throw new Error("The verified PASS artifact is required.");
+
   return (
     <main>
       <nav aria-label="Primary navigation" className="nav">
         <a className="brand" href="#top" aria-label="FlowProof home">FlowProof</a>
-        <a className="navLink" href="#run">View demo run</a>
+        <a className="navLink" href="#evidence">Inspect live evidence</a>
       </nav>
 
       <section className="hero" id="top">
@@ -17,7 +26,7 @@ export default function Home() {
           FlowProof uses real cloud browsers to verify signup, checkout, booking,
           and the workflows your business cannot afford to break.
         </p>
-        <a className="primaryAction" href="#run">Inspect a complete run</a>
+        <a className="primaryAction" href="#evidence">Inspect verified Solari runs</a>
       </section>
 
       <section className="problem" aria-labelledby="difference-title">
@@ -32,44 +41,88 @@ export default function Home() {
         </p>
       </section>
 
-      <section className="runSection" id="run" aria-labelledby="run-title">
+      <section className="evidenceSection" id="evidence" aria-labelledby="evidence-title">
+        <div className="sectionIntro">
+          <div>
+            <p className="eyebrow">Real Solari browser evidence</p>
+            <h2 id="evidence-title">Three outcomes. No false certainty.</h2>
+          </div>
+          <p>
+            These sanitized runs distinguish a confirmed product regression from
+            a condition where the product outcome could not be determined.
+          </p>
+        </div>
+
+        <div className="outcomeGrid">
+          {liveRuns.map((run) => (
+            <article className="outcomeCard" key={run.id}>
+              <div className="cardHeading">
+                <span className="status" data-outcome={run.outcome}>{run.outcome}</span>
+                <span>{formatDuration(run.durationMs)}</span>
+              </div>
+              <h3>{run.scenario === "pass" ? "Journey verified" : run.scenario === "fail" ? "Controlled regression caught" : "Certainty withheld"}</h3>
+              <p>{run.summary}</p>
+              <dl>
+                <div><dt>Classification</dt><dd>{run.failureType ?? "Assertions passed"}</dd></div>
+                <div><dt>Completed</dt><dd>{formatTimestamp(run.startedAt)} UTC</dd></div>
+              </dl>
+              <a href={run.evidenceImage}>Open screenshot evidence</a>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="runSection" aria-labelledby="run-title">
         <div className="sectionHeading">
           <div>
-            <p className="eyebrow">Reference run</p>
-            <h2 id="run-title">{demoRun.journeyName}</h2>
+            <p className="eyebrow">Verified PASS timeline</p>
+            <h2 id="run-title">{passRun.journeyName}</h2>
           </div>
-          <span className="status">{demoRun.outcome}</span>
+          <span className="status" data-outcome={passRun.outcome}>{passRun.outcome}</span>
         </div>
 
         <div className="runSummary">
           <dl>
-            <div><dt>Environment</dt><dd>{demoRun.environment}</dd></div>
-            <div><dt>Duration</dt><dd>{formatDuration(demoRun.durationMs)}</dd></div>
-            <div><dt>Evidence</dt><dd>{demoRun.steps.length} verified steps</dd></div>
+            <div><dt>Environment</dt><dd>{passRun.environment}</dd></div>
+            <div><dt>Duration</dt><dd>{formatDuration(passRun.durationMs)}</dd></div>
+            <div><dt>Evidence</dt><dd>{passRun.steps.length} verified steps</dd></div>
           </dl>
-          <p>{demoRun.summary}</p>
+          <p>{passRun.summary}</p>
         </div>
 
-        <ol className="timeline" aria-label="Journey steps">
-          {demoRun.steps.map((step, index) => (
-            <li key={step.stepId}>
-              <div className="stepIndex" aria-hidden="true">{index + 1}</div>
-              <div className="stepBody">
-                <div className="stepTitle">
-                  <h3>{step.intent}</h3>
-                  <span>{formatDuration(step.durationMs)}</span>
+        <div className="reportGrid">
+          <ol className="timeline" aria-label="Journey steps">
+            {passRun.steps.map((step, index) => (
+              <li key={step.stepId}>
+                <div className="stepIndex" aria-hidden="true">{index + 1}</div>
+                <div className="stepBody">
+                  <div className="stepTitle">
+                    <h3>{step.intent}</h3>
+                    <span>{formatDuration(step.durationMs)}</span>
+                  </div>
+                  <p>{step.observed}</p>
                 </div>
-                <p>{step.observed}</p>
-              </div>
-              <span className="stepStatus">Passed</span>
-            </li>
-          ))}
-        </ol>
+                <span className="stepStatus">Passed</span>
+              </li>
+            ))}
+          </ol>
+
+          <figure className="evidenceFigure">
+            <Image
+              alt="SauceDemo cart containing one Sauce Labs Backpack after refresh"
+              height={720}
+              priority
+              src={passRun.evidenceImage}
+              width={1280}
+            />
+            <figcaption>Final state captured by the live Solari cloud browser.</figcaption>
+          </figure>
+        </div>
 
         <p className="disclosure">
-          This run uses deterministic fixture data while the live Solari runner is
-          being integrated. It demonstrates the report contract, not a completed
-          production monitor.
+          Verified against a public synthetic storefront on 2 September 2026.
+          This evidence proves only the declared journey at the recorded time; it
+          does not claim complete product quality or production readiness.
         </p>
       </section>
     </main>

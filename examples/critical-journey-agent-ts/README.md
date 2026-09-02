@@ -33,3 +33,19 @@ assertion failure returns `FAIL`.
 The public target proves the Solari execution contract. Paying customers use an
 approved test environment, encrypted secret references, versioned journeys,
 scheduled runs, retention controls, and human-reviewed changes.
+
+## Verified reference run
+
+The checked-in evidence was produced by a real Solari cloud browser on
+2026-09-02. All four declared steps passed, including confirmation that the
+selected product remained in the cart after refresh. Solari reported the
+session as `completed` with an eight-second session duration, nine browser-seconds
+of metered usage, and no active instance left running. The console rounded the
+cost of this short run to `$0.00`.
+
+- `artifacts/run.json` contains the sanitized, step-level result.
+- `artifacts/final-state.png` shows the final cart state.
+
+These artifacts demonstrate the reference PASS path, not general product
+reliability. Controlled FAIL and INCONCLUSIVE demonstrations are still required
+before the challenge submission is complete.

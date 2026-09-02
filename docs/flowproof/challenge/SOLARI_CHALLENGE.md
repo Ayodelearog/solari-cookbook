@@ -68,17 +68,17 @@ explicitly require the entire business product to remain inside that fork.
 - [x] `upstream` points to `solari-sdk/solari-cookbook`.
 - [x] License and upstream attribution are preserved.
 - [x] Critical-journey example is small, documented, and type-checks.
-- [ ] Product code and historical research are organized without obscuring the
+- [x] Product code and historical research are organized without obscuring the
       example.
 
 ### Live Solari proof
 
-- [ ] A real Solari browser runs the reference journey.
-- [ ] Session and runner are closed in `finally`.
+- [x] A real Solari browser runs the reference journey.
+- [x] Session and runner are closed in `finally`.
 - [ ] PASS, FAIL, and INCONCLUSIVE are demonstrated accurately.
 - [ ] At least one controlled regression is caught.
-- [ ] Evidence excludes secrets and sensitive input.
-- [ ] Run cost, duration, and limitations are documented.
+- [x] Evidence excludes secrets and sensitive input.
+- [x] Run cost, duration, and limitations are documented.
 
 ### Product-market proof
 
@@ -105,7 +105,12 @@ explicitly require the entire business product to remain inside that fork.
 - Product strategy and architecture: started.
 - Next.js report shell and journey contract: started with fixtures.
 - Actual GitHub fork: created at https://github.com/Ayodelearog/solari-cookbook.
-- Live Solari runner: implemented but not yet executed with a Solari API key.
+- Live Solari runner: verified on 2026-09-02. The four-step SauceDemo journey
+  returned `PASS`; Solari marked the browser session `completed` after eight
+  seconds and showed nine browser-seconds of usage, rounded to `$0.00`.
+- Live evidence: sanitized `artifacts/run.json` and `artifacts/final-state.png`
+  are stored with the runnable example. This proves the PASS path only; FAIL,
+  INCONCLUSIVE, and controlled-regression demonstrations remain outstanding.
 - Public deployment: not created.
 - Customer proof: not collected.
 - Public tagged post: not published.

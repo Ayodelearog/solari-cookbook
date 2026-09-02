@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "1",
+  "journey": "Purchase path reaches a cart with the selected product",
+  "targetUrl": "https://www.saucedemo.com/",
+  "sessionId": "ip-10-0-11-65:e955ab63-306e-4242-b4cd-70944e0cf32d:cmtkbl70200bwo4012gzfeph8:1788368460280.AwOVSTAeg615ACoDP4q3mA",
+  "startedAt": "2026-09-02T17:00:58.942Z",
+  "completedAt": "2026-09-02T17:01:07.067Z",
+  "outcome": "PASS",
+  "summary": "All declared customer outcomes were observed.",
+  "steps": [
+    {
+      "id": "open",
+      "intent": "Open the storefront",
+      "status": "passed",
+      "durationMs": 776,
+      "observed": "The login action is visible."
+    },
+    {
+      "id": "authenticate",
+      "intent": "Sign in with a synthetic customer",
+      "status": "passed",
+      "durationMs": 1168,
+      "observed": "The product inventory is visible after authentication."
+    },
+    {
+      "id": "add-product",
+      "intent": "Add the expected product to the cart",
+      "status": "passed",
+      "durationMs": 842,
+      "observed": "The cart badge reports one product."
+    },
+    {
+      "id": "verify-cart",
+      "intent": "Verify the selected product persists",
+      "status": "passed",
+      "durationMs": 1480,
+      "observed": "Sauce Labs Backpack remains visible after cart refresh."
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "name": "solari-critical-journey-agent-ts",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": { "start": "tsx index.ts", "type-check": "tsc --noEmit" },
+  "dependencies": { "@solarisdk/browser": "^0.1.3" },
+  "devDependencies": { "@types/node": "^24.0.0", "tsx": "^4.20.0", "typescript": "^7.0.2" }
+}

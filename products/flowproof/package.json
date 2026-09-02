@@ -1,0 +1,13 @@
+{
+  "name": "flowproof",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": ["apps/*"],
+  "scripts": {
+    "dev": "npm run dev --workspace @flowproof/web",
+    "build": "npm run build --workspace @flowproof/web",
+    "lint": "npm run lint --workspace @flowproof/web",
+    "type-check": "npm run type-check --workspace @flowproof/web",
+    "test": "npm run test --workspace @flowproof/web"
+  }
+}

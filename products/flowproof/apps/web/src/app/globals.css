@@ -285,10 +285,49 @@ button { font: inherit; }
 .dashboardPage { min-height: 100vh; padding-bottom: 6rem; }
 .dashboardNavActions { display: flex; align-items: center; gap: 0.75rem; }
 .authPage { display: grid; min-height: 100vh; place-items: center; padding: 1rem; }
-.dashboardIntro, .consoleShell { width: min(calc(100% - 3rem), 64rem); margin-inline: auto; }
+.dashboardIntro, .commercialShell, .consoleShell { width: min(calc(100% - 3rem), 68rem); margin-inline: auto; }
 .dashboardIntro { padding: 5.5rem 0 2rem; }
 .dashboardIntro h2 { max-width: 44rem; margin-bottom: 1rem; font-size: clamp(2.8rem, 6vw, 5rem); line-height: 0.96; letter-spacing: -0.06em; }
 .dashboardIntro > p:last-child { max-width: 42rem; color: var(--muted-strong); font-size: 1.02rem; line-height: 1.65; }
+.workspaceLabel { display: inline-flex; align-items: center; gap: 0.65rem; margin-bottom: 2.25rem; padding: 0.45rem 0.65rem; border: 1px solid var(--line); border-radius: 999px; color: var(--muted-strong); background: rgba(255,255,255,.56); font-size: .72rem; font-weight: 650; }
+.commercialShell { display: grid; gap: 1.25rem; }
+.metricGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: .75rem; }
+.metricGrid > div { display: grid; gap: .4rem; padding: 1.15rem; border: 1px solid rgba(255,255,255,.88); border-radius: .875rem; background: rgba(255,255,255,.66); box-shadow: var(--shadow-card); }
+.metricGrid span { color: var(--muted); font-size: .72rem; font-weight: 680; text-transform: uppercase; letter-spacing: .06em; }
+.metricGrid strong { font-size: 2rem; line-height: 1; letter-spacing: -.05em; }
+.metricGrid small { color: var(--muted); font-size: .72rem; }
+.dashboardGrid { display: grid; grid-template-columns: minmax(0, 1.18fr) minmax(18rem, .82fr); gap: 1.25rem; align-items: start; }
+.onboardingCard, .journeyListCard, .historyCard { padding: 1.5rem; border: 1px solid rgba(255,255,255,.9); border-radius: 1rem; background: rgba(255,255,255,.82); box-shadow: var(--shadow-card); }
+.panelHeading { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+.panelHeading h2 { margin-bottom: 1rem; font-size: 1.55rem; letter-spacing: -.04em; }
+.panelHeading > span { color: var(--muted); font-size: .72rem; }
+.panelCopy { max-width: 38rem; color: var(--muted-strong); font-size: .88rem; line-height: 1.55; }
+.onboardingCard form { display: grid; gap: 1rem; }
+.formGrid { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+.onboardingCard label { display: grid; gap: .45rem; color: var(--ink-soft); font-size: .76rem; font-weight: 680; }
+.onboardingCard input, .onboardingCard textarea { width: 100%; padding: .72rem .78rem; border: 1px solid var(--line-strong); border-radius: .55rem; color: var(--ink); background: var(--surface-raised); font: inherit; font-size: .84rem; resize: vertical; outline: none; transition: border-color var(--duration-ui) ease, box-shadow var(--duration-ui) ease; }
+.onboardingCard input:focus, .onboardingCard textarea:focus { border-color: var(--focus); box-shadow: 0 0 0 3px rgba(37,99,235,.12); }
+.onboardingCard .checkboxLabel { grid-template-columns: auto 1fr; align-items: start; gap: .65rem; color: var(--muted-strong); font-weight: 520; line-height: 1.45; }
+.checkboxLabel input { width: 1rem; height: 1rem; margin-top: .12rem; accent-color: var(--accent); }
+.formFooter { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-top: .25rem; }
+.formFooter p { margin: 0; color: var(--muted); font-size: .72rem; }
+.formFooter button { padding: .72rem .9rem; border: 0; border-radius: .6rem; color: #fff; background: var(--accent-strong); font-weight: 700; cursor: pointer; }
+.formMessage { margin: 1rem 0 0; padding: .75rem; border-radius: .5rem; color: var(--accent-strong); background: var(--accent-soft); font-size: .8rem; }
+.journeyListCard { display: grid; gap: .2rem; }
+.journeyListItem { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding: 1rem 0; border-top: 1px solid var(--line); }
+.journeyListItem h3 { margin: .55rem 0 .25rem; font-size: .92rem; letter-spacing: -.02em; }
+.journeyListItem p, .journeyListItem small, .emptyHint { margin: 0; color: var(--muted); font-size: .74rem; line-height: 1.5; }
+.reviewStatus { display: inline-flex; padding: .32rem .45rem; border-radius: 999px; color: var(--uncertain); background: var(--uncertain-soft); font-size: .6rem; font-weight: 800; letter-spacing: .06em; }
+.emptyHint { padding: 1rem 0; border-top: 1px solid var(--line); }
+.sectionDivider { margin-top: 3.5rem; padding-top: 2.5rem; border-top: 1px solid var(--line); }
+.sectionDivider h2 { margin-bottom: .7rem; font-size: clamp(2rem, 4vw, 3.2rem); line-height: 1; letter-spacing: -.05em; }
+.sectionDivider > p:last-child { max-width: 44rem; margin-bottom: 1.5rem; color: var(--muted-strong); line-height: 1.6; }
+.historyCard { margin-top: 2.25rem; }
+.historyList { border-top: 1px solid var(--line); }
+.historyList article { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid var(--line); }
+.historyList article > div { display: grid; gap: .25rem; }
+.historyList strong { font-size: .85rem; }
+.historyList article > div span { color: var(--muted); font-size: .72rem; }
 .consoleShell { display: grid; gap: 1.25rem; }
 .journeyConsole, .freshReport { overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.9); border-radius: 1.25rem; background: rgba(255, 255, 255, 0.86); box-shadow: var(--shadow-report); }
 .consoleTopline { display: flex; justify-content: space-between; gap: 1rem; padding: 0.85rem 1.5rem; border-bottom: 1px solid var(--line); color: var(--muted); background: rgba(235, 240, 234, 0.5); font-size: 0.72rem; font-weight: 620; }
@@ -378,7 +417,7 @@ a:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
   .runSummary dl div:first-child { grid-column: 1 / -1; }
   .timeline li { grid-template-columns: 2.25rem 1fr; }
   .stepStatus { grid-column: 2; }
-  .dashboardIntro, .consoleShell { width: min(calc(100% - 1.25rem), 64rem); }
+  .dashboardIntro, .commercialShell, .consoleShell { width: min(calc(100% - 1.25rem), 68rem); }
   .dashboardIntro { padding-top: 4rem; }
   .consoleHeading, .consoleAction, .freshReportHeading { flex-direction: column; }
   .consoleHeading { padding: 1.5rem 1.1rem 1.1rem; }
@@ -388,6 +427,9 @@ a:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
   .freshReport { padding: 0 1.1rem 1.1rem; }
   .freshReport .reportTopline { margin: 0 -1.1rem 1.5rem; padding-inline: 1.1rem; }
   .freshAssertion { grid-template-columns: 1fr; }
+  .metricGrid, .dashboardGrid, .formGrid { grid-template-columns: 1fr; }
+  .formFooter { align-items: stretch; flex-direction: column; }
+  .formFooter button { width: 100%; }
 }
 
 @media (prefers-reduced-motion: reduce) {

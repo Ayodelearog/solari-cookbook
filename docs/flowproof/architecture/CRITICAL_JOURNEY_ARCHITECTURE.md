@@ -44,6 +44,19 @@ Infrastructure errors may enter RETRY_WAIT and return to QUEUED within budget.
 Product assertion failures are not retried indefinitely. One controlled rerun
 may distinguish reproducible failure from intermittent behavior.
 
+## Journey onboarding state machine
+
+```text
+DRAFT_REVIEW -> APPROVED -> ACTIVE | PAUSED
+             -> REJECTED
+```
+
+Creating a draft stores an `Environment`, `Journey`, and immutable
+`JourneyVersion` together. It cannot enqueue a run. Approval requires domain and
+redirect checks, declared effects, synthetic credentials, deterministic success
+assertions, cleanup, and resource budgets. A run always references an approved
+version; editing creates a new version and returns it to review.
+
 ## Challenge-to-production boundary
 
 The first implementation may use deterministic fixtures and an in-process

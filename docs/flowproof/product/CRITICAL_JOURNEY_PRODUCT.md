@@ -44,15 +44,30 @@ This is the same core artifact a paying customer receives, not a throwaway demo.
 
 ## Commercial MVP
 
-- Organizations and users.
-- Versioned journey specifications.
-- Staging and test environments.
+- Authenticated personal workspaces, with organization workspaces when active.
+- Customer-submitted journey briefs and public HTTPS environments.
+- Managed safety/test-design review before execution.
+- Versioned journey specifications and retained run history.
+- One approved reference journey running through the production-shaped stack.
+
+The next commercial capabilities are:
+
+- Organization management and invitations.
+- Approved customer staging and test environments.
 - Encrypted synthetic credentials.
 - Scheduled and deployment-triggered runs.
 - Controlled retries and failure classification.
 - Screenshot, console, and step evidence.
 - Email, Slack, and webhook alerts.
 - Run history, usage metering, limits, and billing.
+
+### Commercial v1 acceptance
+
+An authenticated customer can submit an environment, business purpose, and exact
+successful outcome; explicitly confirm synthetic-only data and persistence;
+refresh the product and still see the tenant-owned journey in review; execute
+the approved reference journey; and see retained run history and private
+evidence. Customer-submitted journeys cannot execute before approval.
 
 ## Non-goals
 

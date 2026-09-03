@@ -1,4 +1,4 @@
-import { and, asc, eq } from "drizzle-orm";
+import { and, asc, desc, eq } from "drizzle-orm";
 import { getDb } from "@/db";
 import { evidence, runs, stepResults } from "@/db/schema";
 import { selfServiceRunSchema, type SelfServiceRun } from "@/domain/self-service-run";
@@ -131,4 +131,15 @@ export async function getOwnedEvidence(runId: string, evidenceId: string, ownerK
     .from(evidence).innerJoin(runs, eq(evidence.runId, runs.id))
     .where(and(eq(evidence.id, evidenceId), eq(evidence.runId, runId), eq(runs.ownerKey, ownerKey))).limit(1);
   return rows[0] ?? null;
+}
+
+export async function listOwnedRunSummaries(ownerKey: string) {
+  return getDb().select({
+    id: runs.id,
+    journeyName: runs.journeyName,
+    state: runs.state,
+    outcome: runs.outcome,
+    createdAt: runs.createdAt,
+    completedAt: runs.completedAt,
+  }).from(runs).where(eq(runs.ownerKey, ownerKey)).orderBy(desc(runs.createdAt)).limit(10);
 }

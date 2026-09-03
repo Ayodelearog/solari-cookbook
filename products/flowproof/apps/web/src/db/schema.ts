@@ -46,3 +46,39 @@ export const evidence = pgTable("flowproof_evidence", {
   retentionUntil: timestamp("retention_until", { withTimezone: true, mode: "date" }).notNull(),
   createdAt: timestamp("created_at", { withTimezone: true, mode: "date" }).defaultNow().notNull(),
 });
+
+export const environments = pgTable("flowproof_environments", {
+  id: uuid("id").primaryKey(),
+  ownerKey: text("owner_key").notNull(),
+  name: text("name").notNull(),
+  baseUrl: text("base_url").notNull(),
+  hostname: text("hostname").notNull(),
+  status: text("status").notNull(),
+  syntheticDataConfirmed: boolean("synthetic_data_confirmed").notNull().default(false),
+  createdBy: text("created_by").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true, mode: "date" }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true, mode: "date" }).defaultNow().notNull(),
+});
+
+export const journeys = pgTable("flowproof_journeys", {
+  id: uuid("id").primaryKey(),
+  ownerKey: text("owner_key").notNull(),
+  environmentId: uuid("environment_id").notNull().references(() => environments.id, { onDelete: "cascade" }),
+  name: text("name").notNull(),
+  businessPurpose: text("business_purpose").notNull(),
+  expectedOutcome: text("expected_outcome").notNull(),
+  status: text("status").notNull(),
+  currentVersion: integer("current_version").notNull().default(1),
+  createdBy: text("created_by").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true, mode: "date" }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true, mode: "date" }).defaultNow().notNull(),
+});
+
+export const journeyVersions = pgTable("flowproof_journey_versions", {
+  id: uuid("id").primaryKey(),
+  journeyId: uuid("journey_id").notNull().references(() => journeys.id, { onDelete: "cascade" }),
+  version: integer("version").notNull(),
+  specification: jsonb("specification").notNull(),
+  createdBy: text("created_by").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true, mode: "date" }).defaultNow().notNull(),
+}, (table) => [uniqueIndex("flowproof_journey_versions_journey_version_idx").on(table.journeyId, table.version)]);

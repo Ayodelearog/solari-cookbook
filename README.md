@@ -7,6 +7,9 @@ Every example in this repo is a complete program you can run in under a minute.
 They are deliberately small: one idea each, no framework, no scaffolding to read
 past. Copy one into your project and change the parts you care about.
 
+FlowProof, the product-shaped critical-journey report built around the reference
+runner, is live at [flowproof-one.vercel.app](https://flowproof-one.vercel.app).
+
 ## Examples
 
 ### Cloud browser
@@ -86,6 +89,7 @@ Things that cost you an afternoon if you meet them cold:
 - Console — [console.getsolari.com](https://console.getsolari.com)
 - Changelog — [changelog.getsolari.com](https://changelog.getsolari.com)
 - Questions — [hello@getsolari.com](mailto:hello@getsolari.com)
+- FlowProof live demo — [flowproof-one.vercel.app](https://flowproof-one.vercel.app)
 
 ## Contributing
 

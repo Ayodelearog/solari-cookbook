@@ -91,8 +91,8 @@ explicitly require the entire business product to remain inside that fork.
 
 ### Public submission
 
-- [ ] Public deployment is accessible.
-- [ ] Public GitHub URL is included.
+- [x] Public deployment is accessible.
+- [x] Public GitHub URL is included in the repository and deployment record.
 - [ ] Demo video or concise walkthrough shows the complete path.
 - [ ] LinkedIn or X post explains the problem, user, Solari architecture,
       evidence, limitations, and what was learned.
@@ -113,6 +113,8 @@ explicitly require the entire business product to remain inside that fork.
   and INCONCLUSIVE are stored under `artifacts/<scenario>/`. The FAIL scenario
   deliberately expects the wrong product; it is diagnostic evidence, not a
   claim that SauceDemo has a real regression.
-- Public deployment: not created.
+- Public deployment: https://flowproof-one.vercel.app. The homepage and PASS,
+  FAIL, and INCONCLUSIVE evidence assets returned HTTP 200 and the production
+  interface was inspected in-browser on 2026-09-03.
 - Customer proof: not collected.
 - Public tagged post: not published.

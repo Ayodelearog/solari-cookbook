@@ -4,6 +4,7 @@ import { failureTypeSchema, journeyOutcomeSchema } from "./journey";
 export const runJourneyRequestSchema = z.object({
   schemaVersion: z.literal("1"),
   journeyId: z.literal("demo-purchase-persistence"),
+  idempotencyKey: z.string().uuid(),
   confirmed: z.literal(true),
 });
 
@@ -30,7 +31,22 @@ export const selfServiceRunSchema = z.object({
   expected: z.string().min(1),
   observed: z.string().min(1),
   steps: z.array(selfServiceStepSchema).min(1),
-  screenshotDataUrl: z.string().startsWith("data:image/png;base64,").optional(),
+  evidenceUrl: z.string().startsWith("/api/runs/").optional(),
 });
 
 export type SelfServiceRun = z.infer<typeof selfServiceRunSchema>;
+
+export const runStateSchema = z.enum(["CREATED", "QUEUED", "RUNNING", "PASSED", "FAILED", "INCONCLUSIVE"]);
+
+export const queuedRunSchema = z.object({
+  schemaVersion: z.literal("1"),
+  runId: z.string().uuid(),
+  state: runStateSchema,
+});
+
+export const runStatusResponseSchema = z.discriminatedUnion("complete", [
+  z.object({ schemaVersion: z.literal("1"), complete: z.literal(false), runId: z.string().uuid(), state: runStateSchema }),
+  z.object({ schemaVersion: z.literal("1"), complete: z.literal(true), run: selfServiceRunSchema }),
+]);
+
+export type RunStatusResponse = z.infer<typeof runStatusResponseSchema>;

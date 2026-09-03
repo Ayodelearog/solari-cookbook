@@ -20,8 +20,8 @@ const journeyName = "Purchase path keeps the selected product after refresh";
 const expected = "Sauce Labs Backpack remains in the cart after refresh.";
 const targetUrl = "https://www.saucedemo.com/";
 
-export async function runDemoJourney(apiKey: string): Promise<SelfServiceRun> {
-  const runId = randomUUID();
+export async function runDemoJourney(apiKey: string, requestedRunId?: string): Promise<SelfServiceRun & { screenshotDataUrl?: string }> {
+  const runId = requestedRunId ?? randomUUID();
   const startedAt = new Date();
   const steps: Step[] = [];
   const screenshotPath = join(tmpdir(), `flowproof-${runId}.png`);

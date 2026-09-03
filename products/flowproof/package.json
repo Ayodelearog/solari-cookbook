@@ -9,5 +9,16 @@
     "lint": "npm run lint --workspace @flowproof/web",
     "type-check": "npm run type-check --workspace @flowproof/web",
     "test": "npm run test --workspace @flowproof/web"
+  },
+  "overrides": {
+    "@workflow/core": {
+      "nanoid": "5.1.16"
+    },
+    "@workflow/world-local": {
+      "undici": "7.29.0"
+    },
+    "@workflow/world-vercel": {
+      "undici": "7.29.0"
+    }
   }
 }

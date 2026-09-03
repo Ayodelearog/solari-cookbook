@@ -1,25 +1,53 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
-import { selfServiceRunSchema, type SelfServiceRun } from "@/domain/self-service-run";
+import { useEffect, useState } from "react";
+import { queuedRunSchema, runStatusResponseSchema, type SelfServiceRun } from "@/domain/self-service-run";
 
 type RunState = "idle" | "confirming" | "running" | "complete" | "error";
+const activeRunStorageKey = "flowproof.activeRunId";
+
+async function waitForRun(runId: string) {
+  const deadline = Date.now() + 120_000;
+  while (Date.now() < deadline) {
+    const statusResponse = await fetch(`/api/runs/${runId}`, { cache: "no-store" });
+    const statusBody: unknown = await statusResponse.json();
+    if (!statusResponse.ok) throw new Error("The run status could not be retrieved.");
+    const status = runStatusResponseSchema.parse(statusBody);
+    if (status.complete) return status.run;
+    await new Promise((resolve) => window.setTimeout(resolve, 1_500));
+  }
+  throw new Error("The run is still processing. Reload this page to reconnect to its persisted report.");
+}
 
 export function RunConsole() {
   const [state, setState] = useState<RunState>("idle");
   const [run, setRun] = useState<SelfServiceRun | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  useEffect(() => {
+    const activeRunId = window.localStorage.getItem(activeRunStorageKey);
+    if (!activeRunId) return;
+    void Promise.resolve().then(() => setState("running"));
+    void waitForRun(activeRunId).then((persistedRun) => {
+      setRun(persistedRun);
+      setState("complete");
+    }).catch((statusError: unknown) => {
+      setError(statusError instanceof Error ? statusError.message : "The persisted run could not be retrieved.");
+      setState("error");
+    });
+  }, []);
+
   const execute = async () => {
     setState("running");
     setError(null);
 
     try {
+      const idempotencyKey = crypto.randomUUID();
       const response = await fetch("/api/runs", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ schemaVersion: "1", journeyId: "demo-purchase-persistence", confirmed: true }),
+        body: JSON.stringify({ schemaVersion: "1", journeyId: "demo-purchase-persistence", idempotencyKey, confirmed: true }),
       });
       const body: unknown = await response.json();
       if (!response.ok) {
@@ -28,7 +56,10 @@ export function RunConsole() {
           : "The journey could not be started.";
         throw new Error(message);
       }
-      setRun(selfServiceRunSchema.parse(body));
+      const queued = queuedRunSchema.parse(body);
+      window.localStorage.setItem(activeRunStorageKey, queued.runId);
+      const completedRun = await waitForRun(queued.runId);
+      setRun(completedRun);
       setState("complete");
     } catch (runError) {
       setError(runError instanceof Error ? runError.message : "The journey could not be completed.");
@@ -78,7 +109,7 @@ export function RunConsole() {
         </div>
       )}
 
-      {state === "running" && <section aria-live="polite" className="runFeedback"><span className="runSpinner" aria-hidden="true" /><div><strong>Solari is performing the journey</strong><p>Keep this page open while the first synchronous runner completes.</p></div></section>}
+      {state === "running" && <section aria-live="polite" className="runFeedback"><span className="runSpinner" aria-hidden="true" /><div><strong>Solari is performing the journey</strong><p>The durable run continues if this page reloads. Its report and evidence are stored privately.</p></div></section>}
       {state === "error" && <section aria-live="assertive" className="runFeedback runError"><div><strong>Run unavailable</strong><p>{error}</p></div></section>}
 
       {state === "complete" && run && (
@@ -101,7 +132,7 @@ export function RunConsole() {
               </li>
             ))}
           </ol>
-          {run.screenshotDataUrl && <figure className="evidenceFigure"><Image alt="Final state captured by the fresh Solari run" height={720} src={run.screenshotDataUrl} unoptimized width={1280} /><figcaption>Raw browser evidence from this run.</figcaption></figure>}
+          {run.evidenceUrl && <figure className="evidenceFigure"><Image alt="Final state captured by the fresh Solari run" height={720} src={run.evidenceUrl} unoptimized width={1280} /><figcaption>Private browser evidence available only to the run owner.</figcaption></figure>}
         </section>
       )}
     </div>

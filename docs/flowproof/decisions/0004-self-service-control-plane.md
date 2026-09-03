@@ -24,9 +24,10 @@ The slice is deliberately split into replaceable boundaries:
 - The route performs authentication, authorization, validation, quota, and
   idempotency checks before execution as those capabilities arrive.
 - A runner adapter owns Solari and always closes sessions.
-- Postgres will own journey and run metadata.
-- Private object storage will own screenshots and traces.
-- A durable workflow will own production execution and retries.
+- Postgres owns tenant-scoped run metadata and step results.
+- Private object storage owns screenshots, served only through an authenticated
+  ownership-checking endpoint.
+- A durable workflow owns production execution and step retries.
 
 ## Delivery order
 
@@ -41,9 +42,12 @@ The slice is deliberately split into replaceable boundaries:
 
 - The public first slice cannot browse arbitrary URLs or accept arbitrary
   credentials.
-- The initial synchronous response demonstrates the complete execution
-  contract but is not called durable or production-ready.
+- The run request returns immediately and the client polls tenant-scoped
+  persisted state; refreshing the page does not interrupt execution.
 - The API key remains a server-only deployment secret.
 - New mutations require schema validation and an explicit user confirmation.
 - A customer-visible report must keep raw observations separate from the
   interpretation that produced its verdict.
+- The first slice uses a personal workspace when no Clerk organization is
+  active. Organization management, quotas, schedules, alerts, billing, and
+  user-configurable journeys remain outside this slice.

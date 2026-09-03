@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { UserButton } from "@clerk/nextjs";
 import { RunConsole } from "./run-console";
 
 export const metadata = {
@@ -12,7 +13,10 @@ export default function DashboardPage() {
       <header className="siteHeader">
         <nav aria-label="Dashboard navigation" className="nav">
           <Link className="brand" href="/"><span className="brandMark" aria-hidden="true">F</span>FlowProof</Link>
-          <Link className="navLink" href="/#evidence">Reference evidence <span aria-hidden="true">↗</span></Link>
+          <div className="dashboardNavActions">
+            <Link className="navLink" href="/#evidence">Reference evidence <span aria-hidden="true">↗</span></Link>
+            <UserButton />
+          </div>
         </nav>
       </header>
       <div className="dashboardIntro">

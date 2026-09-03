@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   outputFileTracingRoot: workspaceRoot,
   outputFileTracingIncludes: {
-    "/*": ["../../node_modules/playwright-core/**/*"],
+    "/api/internal/runs/[runId]/execute": ["../../node_modules/playwright-core/**/*"],
   },
   serverExternalPackages: ["playwright-core"],
   turbopack: { root: workspaceRoot },

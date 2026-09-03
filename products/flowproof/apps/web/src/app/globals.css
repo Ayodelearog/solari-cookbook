@@ -60,6 +60,7 @@ a { color: inherit; }
 .brand,
 .navLink,
 .primaryAction,
+.secondaryAction,
 .evidenceLink {
   transition: transform var(--duration-press) var(--ease-out);
 }
@@ -145,6 +146,8 @@ h1 {
   text-decoration: none;
 }
 .primaryAction span { color: rgba(255, 255, 255, 0.72); }
+.heroActions { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; }
+.secondaryAction { display: inline-flex; align-items: center; gap: 1rem; padding: 0.8rem 0.9rem; color: var(--muted-strong); font-size: 0.9rem; font-weight: 680; text-decoration: none; }
 
 .heroProof {
   position: relative;
@@ -278,6 +281,50 @@ dd { margin: 0; color: var(--ink-soft); font-weight: 680; }
 .evidenceFigure figcaption { padding: 0.75rem 0.875rem; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.72rem; line-height: 1.4; }
 .disclosure { margin: 2rem 0 0; padding: 1rem 1.1rem; border-radius: 0.75rem; color: var(--muted-strong); background: var(--canvas-deep); line-height: 1.55; }
 
+button { font: inherit; }
+.dashboardPage { min-height: 100vh; padding-bottom: 6rem; }
+.dashboardIntro, .consoleShell { width: min(calc(100% - 3rem), 64rem); margin-inline: auto; }
+.dashboardIntro { padding: 5.5rem 0 2rem; }
+.dashboardIntro h2 { max-width: 44rem; margin-bottom: 1rem; font-size: clamp(2.8rem, 6vw, 5rem); line-height: 0.96; letter-spacing: -0.06em; }
+.dashboardIntro > p:last-child { max-width: 42rem; color: var(--muted-strong); font-size: 1.02rem; line-height: 1.65; }
+.consoleShell { display: grid; gap: 1.25rem; }
+.journeyConsole, .freshReport { overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.9); border-radius: 1.25rem; background: rgba(255, 255, 255, 0.86); box-shadow: var(--shadow-report); }
+.consoleTopline { display: flex; justify-content: space-between; gap: 1rem; padding: 0.85rem 1.5rem; border-bottom: 1px solid var(--line); color: var(--muted); background: rgba(235, 240, 234, 0.5); font-size: 0.72rem; font-weight: 620; }
+.consoleHeading { display: flex; align-items: flex-start; justify-content: space-between; gap: 2rem; padding: 2rem 2rem 1.5rem; }
+.consoleHeading h1 { margin-bottom: 0.8rem; font-size: clamp(2.25rem, 5vw, 4rem); }
+.consoleHeading p:last-child { max-width: 37rem; margin: 0; color: var(--muted-strong); line-height: 1.6; }
+.environmentBadge { flex: none; padding: 0.5rem 0.65rem; border: 1px solid var(--line); border-radius: 999px; color: var(--muted-strong); background: var(--canvas); font-size: 0.7rem; font-weight: 700; }
+.journeyContract { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin: 0 2rem; padding: 1.25rem 0; border-block: 1px solid var(--line); }
+.journeyContract div { display: grid; gap: 0.35rem; }
+.journeyContract dd { font-size: 0.82rem; line-height: 1.4; }
+.consoleAction { display: flex; align-items: center; justify-content: space-between; gap: 2rem; padding: 1.5rem 2rem 2rem; }
+.consoleAction > div { display: grid; gap: 0.25rem; }
+.consoleAction span { color: var(--muted); font-size: 0.8rem; line-height: 1.45; }
+.consoleAction button, .dialogActions button { padding: 0.78rem 1rem; border: 0; border-radius: 0.625rem; color: #fff; background: var(--accent-strong); font-weight: 700; cursor: pointer; transition: transform var(--duration-press) var(--ease-out), background var(--duration-ui) ease; }
+.consoleAction button:active, .dialogActions button:active { transform: scale(0.97); }
+.consoleAction button:disabled { cursor: wait; opacity: 0.65; }
+.runFeedback { display: flex; gap: 1rem; align-items: center; padding: 1.1rem 1.25rem; border: 1px solid var(--line); border-radius: 0.875rem; background: var(--surface); }
+.runFeedback div { display: grid; gap: 0.25rem; }
+.runFeedback p { margin: 0; color: var(--muted); font-size: 0.82rem; }
+.runError { border-color: rgba(162, 59, 53, 0.2); background: var(--danger-soft); }
+.runSpinner { width: 1.1rem; height: 1.1rem; flex: none; border: 2px solid var(--accent-soft); border-top-color: var(--accent); border-radius: 50%; animation: spin 700ms linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.dialogBackdrop { position: fixed; z-index: 20; inset: 0; display: grid; place-items: center; padding: 1rem; background: rgba(20, 32, 25, 0.32); backdrop-filter: blur(8px); }
+.confirmDialog { width: min(100%, 30rem); padding: 1.5rem; border: 1px solid rgba(255, 255, 255, 0.9); border-radius: 1rem; background: var(--surface-raised); box-shadow: 0 24px 80px rgba(20, 32, 25, 0.2); }
+.confirmDialog h2 { margin-bottom: 0.8rem; font-size: 1.8rem; letter-spacing: -0.04em; }
+.confirmDialog > p:not(.eyebrow) { color: var(--muted-strong); line-height: 1.6; }
+.dialogActions { display: flex; justify-content: flex-end; gap: 0.65rem; margin-top: 1.5rem; }
+.dialogActions .secondaryButton { border: 1px solid var(--line); color: var(--ink-soft); background: var(--canvas); }
+.freshReport { padding: 0 2rem 2rem; }
+.freshReport .reportTopline { margin: 0 -2rem 2rem; padding-inline: 2rem; }
+.freshReportHeading { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+.freshReportHeading h2 { max-width: 42rem; margin-bottom: 1.5rem; font-size: clamp(2rem, 4vw, 3.2rem); line-height: 1; letter-spacing: -0.05em; }
+.freshAssertion { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
+.freshAssertion div { display: grid; gap: 0.4rem; padding: 1rem; border: 1px solid var(--line); border-radius: 0.75rem; background: var(--canvas); }
+.freshAssertion span { color: var(--muted); font-size: 0.66rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.freshAssertion strong { font-size: 0.9rem; line-height: 1.45; }
+.freshReport .evidenceFigure { max-width: 42rem; margin-top: 2rem; }
+
 .reveal { opacity: 0; transform: translateY(8px); animation: reveal var(--duration-explain) var(--ease-out) forwards; }
 .revealDelay1 { animation-delay: 0ms; }
 .revealDelay2 { animation-delay: 50ms; }
@@ -290,10 +337,12 @@ a:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
 .brand:active,
 .navLink:active,
 .primaryAction:active,
+.secondaryAction:active,
 .evidenceLink:active { transform: scale(0.97); }
 
 @media (hover: hover) and (pointer: fine) {
   .navLink:hover,
+  .secondaryAction:hover,
   .evidenceLink:hover { color: var(--accent); }
   .primaryAction:hover { background: var(--accent); }
 }
@@ -327,6 +376,16 @@ a:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
   .runSummary dl div:first-child { grid-column: 1 / -1; }
   .timeline li { grid-template-columns: 2.25rem 1fr; }
   .stepStatus { grid-column: 2; }
+  .dashboardIntro, .consoleShell { width: min(calc(100% - 1.25rem), 64rem); }
+  .dashboardIntro { padding-top: 4rem; }
+  .consoleHeading, .consoleAction, .freshReportHeading { flex-direction: column; }
+  .consoleHeading { padding: 1.5rem 1.1rem 1.1rem; }
+  .journeyContract { grid-template-columns: 1fr 1fr; margin-inline: 1.1rem; }
+  .consoleAction { align-items: stretch; padding: 1.1rem; }
+  .consoleAction button { width: 100%; }
+  .freshReport { padding: 0 1.1rem 1.1rem; }
+  .freshReport .reportTopline { margin: 0 -1.1rem 1.5rem; padding-inline: 1.1rem; }
+  .freshAssertion { grid-template-columns: 1fr; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -335,11 +394,14 @@ a:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
   .brand,
   .navLink,
   .primaryAction,
+  .secondaryAction,
   .evidenceLink { transition: none; }
   .brand:active,
   .navLink:active,
   .primaryAction:active,
+  .secondaryAction:active,
   .evidenceLink:active { transform: none; }
+  .runSpinner { animation-duration: 1.4s; }
   @keyframes revealReduced { to { opacity: 1; } }
 }
 

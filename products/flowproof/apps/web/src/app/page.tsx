@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { liveRuns } from "@/domain/live-runs";
 
 const formatDuration = (milliseconds: number) => `${(milliseconds / 1000).toFixed(1)}s`;
@@ -35,10 +36,10 @@ export default function Home() {
             FlowProof uses real cloud browsers to verify signup, checkout, booking,
             and the workflows your business cannot afford to break.
           </p>
-          <a className="primaryAction reveal revealDelay5" href="#evidence">
-            Inspect verified runs
-            <span aria-hidden="true">↓</span>
-          </a>
+          <div className="heroActions reveal revealDelay5">
+            <Link className="primaryAction" href="/dashboard">Run a live journey <span aria-hidden="true">→</span></Link>
+            <a className="secondaryAction" href="#evidence">Inspect verified runs <span aria-hidden="true">↓</span></a>
+          </div>
         </div>
 
         <aside className="heroProof reveal revealDelay5" aria-label="Latest verified run summary">

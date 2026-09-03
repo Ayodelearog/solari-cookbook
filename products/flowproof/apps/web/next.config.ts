@@ -6,6 +6,11 @@ const workspaceRoot = fileURLToPath(new URL("../..", import.meta.url));
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  outputFileTracingRoot: workspaceRoot,
+  outputFileTracingIncludes: {
+    "/*": ["../../node_modules/playwright-core/**/*"],
+  },
+  serverExternalPackages: ["playwright-core"],
   turbopack: { root: workspaceRoot },
 };
 

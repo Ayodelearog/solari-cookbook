@@ -9,7 +9,11 @@ export async function runJourneyWorkflow(runId: string) {
   try {
     const execution = await executeJourney(runId);
     await persistJourney(execution.result, execution.storedEvidence);
-  } catch {
+  } catch (error) {
+    console.error("FlowProof workflow execution failed", {
+      runId,
+      error: error instanceof Error ? error.message : "Unknown workflow error",
+    });
     await recordInfrastructureFailure(runId, "The durable runner failed after its controlled retries.");
   }
   console.info("FlowProof workflow completed", { runId });

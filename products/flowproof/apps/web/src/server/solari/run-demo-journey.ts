@@ -20,8 +20,11 @@ const expected = "Sauce Labs Backpack remains in the cart after refresh.";
 const targetUrl = "https://www.saucedemo.com/";
 
 export async function runDemoJourney(apiKey: string, requestedRunId?: string): Promise<SelfServiceRun & { screenshotDataUrl?: string }> {
-  const solariModuleName: string = ["@solarisdk", "browser"].join("/");
-  const { Solari } = await import(solariModuleName) as typeof import("@solarisdk/browser");
+  // Keep the ESM-only SDK external to Turbopack and the Workflow compiler.
+  // A normal dynamic import is rewritten into a context loader that fails in a
+  // Vercel step with "module expression is too dynamic".
+  const importExternal = new Function("specifier", "return import(specifier)") as (specifier: string) => Promise<typeof import("@solarisdk/browser")>;
+  const { Solari } = await importExternal("@solarisdk/browser");
   const runId = requestedRunId ?? randomUUID();
   const startedAt = new Date();
   const steps: Step[] = [];

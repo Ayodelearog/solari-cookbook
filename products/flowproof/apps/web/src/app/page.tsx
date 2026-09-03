@@ -14,19 +14,55 @@ export default function Home() {
 
   return (
     <main>
-      <nav aria-label="Primary navigation" className="nav">
-        <a className="brand" href="#top" aria-label="FlowProof home">FlowProof</a>
-        <a className="navLink" href="#evidence">Inspect live evidence</a>
-      </nav>
+      <header className="siteHeader reveal revealDelay1">
+        <nav aria-label="Primary navigation" className="nav">
+          <a className="brand" href="#top" aria-label="FlowProof home">
+            <span className="brandMark" aria-hidden="true">F</span>
+            FlowProof
+          </a>
+          <a className="navLink" href="#evidence">
+            Live evidence
+            <span aria-hidden="true">↘</span>
+          </a>
+        </nav>
+      </header>
 
       <section className="hero" id="top">
-        <p className="eyebrow">Critical journey assurance</p>
-        <h1>Know your customer can finish the journey—not just open the page.</h1>
-        <p className="heroCopy">
-          FlowProof uses real cloud browsers to verify signup, checkout, booking,
-          and the workflows your business cannot afford to break.
-        </p>
-        <a className="primaryAction" href="#evidence">Inspect verified Solari runs</a>
+        <div className="heroMessage">
+          <p className="eyebrow reveal revealDelay2">Critical journey assurance</p>
+          <h1 className="reveal revealDelay3">Know the journey works before your customers tell you it doesn’t.</h1>
+          <p className="heroCopy reveal revealDelay4">
+            FlowProof uses real cloud browsers to verify signup, checkout, booking,
+            and the workflows your business cannot afford to break.
+          </p>
+          <a className="primaryAction reveal revealDelay5" href="#evidence">
+            Inspect verified runs
+            <span aria-hidden="true">↓</span>
+          </a>
+        </div>
+
+        <aside className="heroProof reveal revealDelay5" aria-label="Latest verified run summary">
+          <div className="proofHeader">
+            <div>
+              <span className="liveDot" aria-hidden="true" />
+              Live browser proof
+            </div>
+            <span className="status" data-outcome={passRun.outcome}>{passRun.outcome}</span>
+          </div>
+          <div className="proofJourney">
+            <span>Purchase path</span>
+            <strong>Selected product persisted after refresh.</strong>
+          </div>
+          <dl className="proofMetrics">
+            <div><dt>Steps</dt><dd>{passRun.steps.length}/{passRun.steps.length}</dd></div>
+            <div><dt>Duration</dt><dd>{formatDuration(passRun.durationMs)}</dd></div>
+            <div><dt>Runner</dt><dd>Solari</dd></div>
+          </dl>
+          <div className="proofTrace" aria-hidden="true">
+            {passRun.steps.map((step) => <span key={step.stepId} />)}
+          </div>
+          <p>Verified {formatTimestamp(passRun.startedAt)} UTC</p>
+        </aside>
       </section>
 
       <section className="problem" aria-labelledby="difference-title">
@@ -55,7 +91,7 @@ export default function Home() {
 
         <div className="outcomeGrid">
           {liveRuns.map((run) => (
-            <article className="outcomeCard" key={run.id}>
+            <article className="outcomeCard" data-outcome={run.outcome} key={run.id}>
               <div className="cardHeading">
                 <span className="status" data-outcome={run.outcome}>{run.outcome}</span>
                 <span>{formatDuration(run.durationMs)}</span>
@@ -66,13 +102,19 @@ export default function Home() {
                 <div><dt>Classification</dt><dd>{run.failureType ?? "Assertions passed"}</dd></div>
                 <div><dt>Completed</dt><dd>{formatTimestamp(run.startedAt)} UTC</dd></div>
               </dl>
-              <a href={run.evidenceImage}>Open screenshot evidence</a>
+              <a className="evidenceLink" href={run.evidenceImage}>
+                Open screenshot evidence <span aria-hidden="true">↗</span>
+              </a>
             </article>
           ))}
         </div>
       </section>
 
       <section className="runSection" aria-labelledby="run-title">
+        <div className="reportTopline">
+          <span>Run report</span>
+          <span>Evidence captured by Solari</span>
+        </div>
         <div className="sectionHeading">
           <div>
             <p className="eyebrow">Verified PASS timeline</p>

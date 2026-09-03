@@ -43,3 +43,6 @@ gradients, fake terminal noise, and oversized dashboards without decisions.
 
 The name, logo, typeface, and final palette remain open until positioning and
 early-customer language are validated.
+
+The implemented token, material, typography, component, motion, accessibility,
+and review rules live in [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md).

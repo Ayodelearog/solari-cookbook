@@ -89,6 +89,14 @@ export default function Home() {
           </p>
         </div>
 
+        <aside className="evidenceNote" aria-label="How to read the evidence">
+          <strong>A screenshot records what the browser saw.</strong>
+          <span>
+            The verdict comes from comparing that observation with the declared
+            expectation. PASS and FAIL can therefore show the same browser state.
+          </span>
+        </aside>
+
         <div className="outcomeGrid">
           {liveRuns.map((run) => (
             <article className="outcomeCard" data-outcome={run.outcome} key={run.id}>
@@ -98,12 +106,19 @@ export default function Home() {
               </div>
               <h3>{run.scenario === "pass" ? "Journey verified" : run.scenario === "fail" ? "Controlled regression caught" : "Certainty withheld"}</h3>
               <p>{run.summary}</p>
-              <dl>
+              <div className="assertionPanel">
+                <dl>
+                  <div><dt>Expected</dt><dd>{run.evidenceContext.expected}</dd></div>
+                  <div><dt>Observed</dt><dd>{run.evidenceContext.observed}</dd></div>
+                </dl>
+                <p><strong>Why {run.outcome}</strong>{run.evidenceContext.explanation}</p>
+              </div>
+              <dl className="classificationList">
                 <div><dt>Classification</dt><dd>{run.failureType ?? "Assertions passed"}</dd></div>
                 <div><dt>Completed</dt><dd>{formatTimestamp(run.startedAt)} UTC</dd></div>
               </dl>
               <a className="evidenceLink" href={run.evidenceImage}>
-                Open screenshot evidence <span aria-hidden="true">↗</span>
+                Open raw browser screenshot <span aria-hidden="true">↗</span>
               </a>
             </article>
           ))}

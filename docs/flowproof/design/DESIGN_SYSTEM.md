@@ -60,8 +60,16 @@ visual branding—from Emil Kowalski's public design-engineering guidance.
 
 - Start with the decision: PASS, FAIL, or INCONCLUSIVE.
 - Pair outcome with plain-language meaning before technical classification.
+- Always show the declared expectation beside the observed browser state; a
+  screenshot alone cannot explain an assertion verdict.
+- Preserve raw screenshots without outcome overlays or cosmetic annotations.
+  Interpretation belongs in adjacent, structured report content.
+- Explicitly explain that identical screenshots may produce different verdicts
+  when the journey contracts differ, and that a blank screenshot can be valid
+  evidence of an inconclusive navigation failure.
 - Use a semantic top accent and status-specific tint without flooding the card.
-- Keep screenshots one action away and label them as evidence, not decoration.
+- Keep screenshots one action away and label them as raw browser evidence, not
+  decoration or a complete verdict.
 
 ### Run report
 

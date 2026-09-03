@@ -55,6 +55,11 @@ export type JourneyRun = {
   durationMs: number;
   summary: string;
   evidenceImage: string;
+  evidenceContext: {
+    expected: string;
+    observed: string;
+    explanation: string;
+  };
   steps: StepResult[];
 };
 

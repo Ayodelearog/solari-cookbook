@@ -6,7 +6,7 @@ const workspaceRoot = fileURLToPath(new URL("../..", import.meta.url));
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  serverExternalPackages: ["@solarisdk/browser", "patchright-core", "fsevents"],
+  serverExternalPackages: ["patchright-core", "fsevents"],
   turbopack: { root: workspaceRoot },
 };
 

@@ -30,9 +30,11 @@ export function RunConsole() {
     if (!activeRunId) return;
     void Promise.resolve().then(() => setState("running"));
     void waitForRun(activeRunId).then((persistedRun) => {
+      window.localStorage.removeItem(activeRunStorageKey);
       setRun(persistedRun);
       setState("complete");
     }).catch((statusError: unknown) => {
+      window.localStorage.removeItem(activeRunStorageKey);
       setError(statusError instanceof Error ? statusError.message : "The persisted run could not be retrieved.");
       setState("error");
     });
@@ -59,9 +61,11 @@ export function RunConsole() {
       const queued = queuedRunSchema.parse(body);
       window.localStorage.setItem(activeRunStorageKey, queued.runId);
       const completedRun = await waitForRun(queued.runId);
+      window.localStorage.removeItem(activeRunStorageKey);
       setRun(completedRun);
       setState("complete");
     } catch (runError) {
+      window.localStorage.removeItem(activeRunStorageKey);
       setError(runError instanceof Error ? runError.message : "The journey could not be completed.");
       setState("error");
     }

@@ -8,11 +8,10 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   outputFileTracingIncludes: {
     "/*": [
-      "../../node_modules/patchright-core/**/*",
-      "../../node_modules/fsevents/**/*",
+      "../../node_modules/playwright-core/**/*",
     ],
   },
-  serverExternalPackages: ["patchright-core", "fsevents"],
+  serverExternalPackages: ["playwright-core"],
   turbopack: { root: workspaceRoot },
 };
 

@@ -1,4 +1,4 @@
-import { chromium, type Browser } from "patchright-core";
+import { chromium, type Browser } from "playwright-core";
 
 const solariApiUrl = "https://api.getsolari.com";
 

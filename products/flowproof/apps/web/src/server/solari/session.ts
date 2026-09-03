@@ -1,4 +1,6 @@
-import { chromium, type Browser } from "patchright-core";
+import { createRequire } from "node:module";
+import { join } from "node:path";
+import type { Browser } from "patchright-core";
 
 const solariApiUrl = "https://api.getsolari.com";
 
@@ -13,6 +15,11 @@ export type SolariBrowserSession = {
 };
 
 export async function launchSolariBrowser(apiKey: string): Promise<SolariBrowserSession> {
+  const runtimeRequire = createRequire(import.meta.url);
+  const patchrightSpecifier = process.env.VERCEL === "1"
+    ? join(process.cwd(), "node_modules/patchright-core/index.js")
+    : "patchright-core";
+  const { chromium } = runtimeRequire(patchrightSpecifier) as typeof import("patchright-core");
   const headers = { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" };
   const response = await fetch(`${solariApiUrl}/sessions`, {
     method: "POST",

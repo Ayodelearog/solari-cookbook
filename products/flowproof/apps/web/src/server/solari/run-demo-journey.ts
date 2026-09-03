@@ -2,8 +2,8 @@ import { readFile, unlink } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { randomUUID } from "node:crypto";
-import { pathToFileURL } from "node:url";
 import type { SelfServiceRun } from "@/domain/self-service-run";
+import { launchSolariBrowser, type SolariBrowserSession } from "./session";
 
 type FailureType = NonNullable<SelfServiceRun["failureType"]>;
 type Step = SelfServiceRun["steps"][number];
@@ -21,20 +21,11 @@ const expected = "Sauce Labs Backpack remains in the cart after refresh.";
 const targetUrl = "https://www.saucedemo.com/";
 
 export async function runDemoJourney(apiKey: string, requestedRunId?: string): Promise<SelfServiceRun & { screenshotDataUrl?: string }> {
-  // Keep the ESM-only SDK external to Turbopack and the Workflow compiler.
-  // A normal dynamic import is rewritten into a context loader that fails in a
-  // Vercel step with "module expression is too dynamic".
-  const importExternal = new Function("specifier", "return import(specifier)") as (specifier: string) => Promise<typeof import("@solarisdk/browser")>;
-  const sdkSpecifier = process.env.VERCEL === "1"
-    ? pathToFileURL(join(process.cwd(), "node_modules/@solarisdk/browser/dist/index.js")).href
-    : "@solarisdk/browser";
-  const { Solari } = await importExternal(sdkSpecifier);
   const runId = requestedRunId ?? randomUUID();
   const startedAt = new Date();
   const steps: Step[] = [];
   const screenshotPath = join(tmpdir(), `flowproof-${runId}.png`);
-  const solari = new Solari({ apiKey, timeoutMs: 30_000 });
-  let browser: Awaited<ReturnType<typeof solari.launch>> | undefined;
+  let browser: SolariBrowserSession | undefined;
   let page: Awaited<ReturnType<NonNullable<typeof browser>["newPage"]>> | undefined;
   let observed = "The journey did not reach its final assertion.";
 
@@ -52,7 +43,7 @@ export async function runDemoJourney(apiKey: string, requestedRunId?: string): P
   };
 
   try {
-    browser = await solari.launch({ recording: false, retries: 1, probe: true });
+    browser = await launchSolariBrowser(apiKey);
     page = await browser.newPage();
 
     await runStep("open", "Open the storefront", async () => {
@@ -131,7 +122,6 @@ export async function runDemoJourney(apiKey: string, requestedRunId?: string): P
     };
   } finally {
     await browser?.close().catch(() => undefined);
-    await solari.close().catch(() => undefined);
     await unlink(screenshotPath).catch(() => undefined);
   }
 }

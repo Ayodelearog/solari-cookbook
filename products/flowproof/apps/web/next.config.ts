@@ -8,12 +8,11 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   outputFileTracingIncludes: {
     "/*": [
-      "../../node_modules/@solarisdk/browser/**/*",
       "../../node_modules/patchright-core/**/*",
       "../../node_modules/fsevents/**/*",
     ],
   },
-  serverExternalPackages: ["@solarisdk/browser", "patchright-core", "fsevents"],
+  serverExternalPackages: ["patchright-core", "fsevents"],
   turbopack: { root: workspaceRoot },
 };
 

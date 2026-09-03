@@ -2,7 +2,6 @@ import { readFile, unlink } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { randomUUID } from "node:crypto";
-import { Solari } from "@solarisdk/browser";
 import type { SelfServiceRun } from "@/domain/self-service-run";
 
 type FailureType = NonNullable<SelfServiceRun["failureType"]>;
@@ -21,6 +20,8 @@ const expected = "Sauce Labs Backpack remains in the cart after refresh.";
 const targetUrl = "https://www.saucedemo.com/";
 
 export async function runDemoJourney(apiKey: string, requestedRunId?: string): Promise<SelfServiceRun & { screenshotDataUrl?: string }> {
+  const solariModuleName: string = ["@solarisdk", "browser"].join("/");
+  const { Solari } = await import(solariModuleName) as typeof import("@solarisdk/browser");
   const runId = requestedRunId ?? randomUUID();
   const startedAt = new Date();
   const steps: Step[] = [];

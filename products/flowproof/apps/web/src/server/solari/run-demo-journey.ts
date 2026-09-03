@@ -2,6 +2,7 @@ import { readFile, unlink } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { randomUUID } from "node:crypto";
+import { pathToFileURL } from "node:url";
 import type { SelfServiceRun } from "@/domain/self-service-run";
 
 type FailureType = NonNullable<SelfServiceRun["failureType"]>;
@@ -24,7 +25,10 @@ export async function runDemoJourney(apiKey: string, requestedRunId?: string): P
   // A normal dynamic import is rewritten into a context loader that fails in a
   // Vercel step with "module expression is too dynamic".
   const importExternal = new Function("specifier", "return import(specifier)") as (specifier: string) => Promise<typeof import("@solarisdk/browser")>;
-  const { Solari } = await importExternal("@solarisdk/browser");
+  const sdkSpecifier = process.env.LAMBDA_TASK_ROOT
+    ? pathToFileURL(join(process.env.LAMBDA_TASK_ROOT, "node_modules/@solarisdk/browser/dist/index.js")).href
+    : "@solarisdk/browser";
+  const { Solari } = await importExternal(sdkSpecifier);
   const runId = requestedRunId ?? randomUUID();
   const startedAt = new Date();
   const steps: Step[] = [];

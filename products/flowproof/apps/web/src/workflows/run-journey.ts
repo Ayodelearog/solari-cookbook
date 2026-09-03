@@ -1,14 +1,11 @@
-import { put } from "@vercel/blob";
-import { selfServiceRunSchema } from "@/domain/self-service-run";
-import { completeRun, markRunInconclusive, markRunRunning } from "@/server/runs/repository";
-import { runDemoJourney } from "@/server/solari/run-demo-journey";
+import { markRunInconclusive } from "@/server/runs/repository";
+import { createInternalRunToken } from "@/server/runs/internal-auth";
 
 export async function runJourneyWorkflow(runId: string) {
   "use workflow";
   console.info("FlowProof workflow started", { runId });
   try {
-    const execution = await executeJourney(runId);
-    await persistJourney(execution.result, execution.storedEvidence);
+    await executeJourney(runId);
   } catch (error) {
     console.error("FlowProof workflow execution failed", {
       runId,
@@ -25,31 +22,15 @@ export async function executeJourney(runId: string) {
   console.info("FlowProof journey step started", { runId });
   const apiKey = process.env.SOLARI_API_KEY;
   if (!apiKey) throw new Error("SOLARI_API_KEY is not configured.");
-
-  await markRunRunning(runId);
-  const execution = await runDemoJourney(apiKey, runId);
-  const { screenshotDataUrl, ...publicResult } = execution;
-  const result = selfServiceRunSchema.parse(publicResult);
-  let storedEvidence: { id: string; blobUrl: string; pathname: string; sizeBytes: number } | undefined;
-
-  if (screenshotDataUrl) {
-    const encoded = screenshotDataUrl.replace(/^data:image\/png;base64,/, "");
-    const bytes = Buffer.from(encoded, "base64");
-    const evidenceId = crypto.randomUUID();
-    const pathname = `runs/${runId}/${evidenceId}.png`;
-    const blob = await put(pathname, bytes, { access: "private", contentType: "image/png", addRandomSuffix: false });
-    storedEvidence = { id: evidenceId, blobUrl: blob.url, pathname: blob.pathname, sizeBytes: bytes.byteLength };
-  }
-
-  console.info("FlowProof journey step completed", { runId, outcome: result.outcome });
-  return { result, storedEvidence };
-}
-
-async function persistJourney(result: Parameters<typeof completeRun>[0], storedEvidence?: Parameters<typeof completeRun>[1]) {
-  "use step";
-  console.info("FlowProof persistence step started", { runId: result.runId });
-  await completeRun(result, storedEvidence);
-  console.info("FlowProof persistence step completed", { runId: result.runId });
+  const deploymentHost = process.env.VERCEL_URL ?? process.env.VERCEL_PROJECT_PRODUCTION_URL;
+  if (!deploymentHost) throw new Error("The workflow runner host is not configured.");
+  const response = await fetch(`https://${deploymentHost}/api/internal/runs/${runId}/execute`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${createInternalRunToken(runId, apiKey)}` },
+    signal: AbortSignal.timeout(55_000),
+  });
+  if (!response.ok) throw new Error(`The isolated browser runner returned ${response.status}.`);
+  console.info("FlowProof journey step completed", { runId });
 }
 
 async function recordInfrastructureFailure(runId: string, message: string) {

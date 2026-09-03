@@ -22,14 +22,18 @@ export async function executeJourney(runId: string) {
   console.info("FlowProof journey step started", { runId });
   const apiKey = process.env.SOLARI_API_KEY;
   if (!apiKey) throw new Error("SOLARI_API_KEY is not configured.");
-  const deploymentHost = process.env.VERCEL_URL ?? process.env.VERCEL_PROJECT_PRODUCTION_URL;
+  const deploymentHost = process.env.VERCEL_PROJECT_PRODUCTION_URL ?? process.env.VERCEL_URL;
   if (!deploymentHost) throw new Error("The workflow runner host is not configured.");
   const response = await fetch(`https://${deploymentHost}/api/internal/runs/${runId}/execute`, {
     method: "POST",
     headers: { Authorization: `Bearer ${createInternalRunToken(runId, apiKey)}` },
+    redirect: "manual",
     signal: AbortSignal.timeout(55_000),
   });
   if (!response.ok) throw new Error(`The isolated browser runner returned ${response.status}.`);
+  if (!response.headers.get("content-type")?.includes("application/json")) {
+    throw new Error("The isolated browser runner returned an unexpected response.");
+  }
   console.info("FlowProof journey step completed", { runId });
 }
 

@@ -5,6 +5,7 @@ import { RunConsole } from "./run-console";
 import { JourneyOnboarding } from "./journey-onboarding";
 import { listOwnedJourneys } from "@/server/journeys/repository";
 import { listOwnedRunSummaries } from "@/server/runs/repository";
+import { isFlowProofOperator } from "@/server/operators";
 
 export const metadata = {
   title: "Run a journey — FlowProof",
@@ -25,6 +26,7 @@ export default async function DashboardPage() {
         <nav aria-label="Dashboard navigation" className="nav">
           <Link className="brand" href="/"><span className="brandMark" aria-hidden="true">F</span>FlowProof</Link>
           <div className="dashboardNavActions">
+            {isFlowProofOperator(userId) ? <Link className="navLink" href="/operator">Review queue</Link> : null}
             <Link className="navLink" href="/#evidence">Reference evidence <span aria-hidden="true">↗</span></Link>
             <UserButton />
           </div>
@@ -53,7 +55,7 @@ export default async function DashboardPage() {
             </article>
             {journeys.map((journey) => (
               <article className="journeyListItem" key={journey.id}>
-                <div><span className="reviewStatus">IN REVIEW</span><h3>{journey.name}</h3><p>{journey.environment.hostname} · {journey.environment.name}</p></div>
+                <div><span className="reviewStatus" data-status={journey.status}>{journey.status === "DRAFT_REVIEW" ? "IN REVIEW" : journey.status}</span><h3>{journey.name}</h3><p>{journey.environment.hostname} · {journey.environment.name}</p></div>
                 <small>Version {journey.currentVersion}</small>
               </article>
             ))}

@@ -318,7 +318,29 @@ button { font: inherit; }
 .journeyListItem h3 { margin: .55rem 0 .25rem; font-size: .92rem; letter-spacing: -.02em; }
 .journeyListItem p, .journeyListItem small, .emptyHint { margin: 0; color: var(--muted); font-size: .74rem; line-height: 1.5; }
 .reviewStatus { display: inline-flex; padding: .32rem .45rem; border-radius: 999px; color: var(--uncertain); background: var(--uncertain-soft); font-size: .6rem; font-weight: 800; letter-spacing: .06em; }
+.reviewStatus[data-status="APPROVED"] { color: var(--accent-strong); background: var(--accent-soft); }
+.reviewStatus[data-status="REJECTED"] { color: var(--danger); background: var(--danger-soft); }
+.reviewStatus[data-status="PAUSED"] { color: var(--muted-strong); background: var(--canvas-deep); }
 .emptyHint { padding: 1rem 0; border-top: 1px solid var(--line); }
+.reviewNotice { padding: 1rem 1.2rem; border: 1px solid var(--line); border-radius: .875rem; background: var(--canvas-deep); }
+.reviewNotice p { margin: .3rem 0 0; color: var(--muted-strong); font-size: .82rem; line-height: 1.5; }
+.reviewQueue { display: grid; gap: 1rem; }
+.reviewCard { padding: 1.5rem; border: 1px solid rgba(255,255,255,.9); border-radius: 1rem; background: rgba(255,255,255,.82); box-shadow: var(--shadow-card); }
+.reviewCardTopline, .reviewActions { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.reviewCardTopline > span:last-child { color: var(--muted); font-size: .72rem; }
+.reviewCard h2 { margin: 1rem 0 .4rem; font-size: 1.5rem; letter-spacing: -.04em; }
+.reviewCard > p { color: var(--muted-strong); font-size: .82rem; }
+.reviewContract { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.25rem 0; }
+.reviewContract > div { display: grid; gap: .35rem; padding: .9rem; border: 1px solid var(--line); border-radius: .7rem; background: var(--canvas); }
+.reviewContract dd { overflow-wrap: anywhere; font-size: .8rem; line-height: 1.5; }
+.reviewContract a { color: var(--accent-strong); }
+.reviewCard label { display: grid; gap: .45rem; color: var(--ink-soft); font-size: .76rem; font-weight: 680; }
+.reviewCard textarea { width: 100%; padding: .72rem .78rem; border: 1px solid var(--line-strong); border-radius: .55rem; color: var(--ink); background: var(--surface-raised); font: inherit; font-size: .84rem; resize: vertical; outline: none; }
+.reviewCard textarea:focus { border-color: var(--focus); box-shadow: 0 0 0 3px rgba(37,99,235,.12); }
+.reviewActions { justify-content: flex-end; margin-top: 1rem; }
+.reviewActions button { padding: .72rem .9rem; border: 0; border-radius: .6rem; color: #fff; background: var(--accent-strong); font-weight: 700; cursor: pointer; }
+.reviewActions .secondaryButton { border: 1px solid var(--line); color: var(--danger); background: var(--surface-raised); }
+.reviewActions button:disabled { cursor: not-allowed; opacity: .45; }
 .sectionDivider { margin-top: 3.5rem; padding-top: 2.5rem; border-top: 1px solid var(--line); }
 .sectionDivider h2 { margin-bottom: .7rem; font-size: clamp(2rem, 4vw, 3.2rem); line-height: 1; letter-spacing: -.05em; }
 .sectionDivider > p:last-child { max-width: 44rem; margin-bottom: 1.5rem; color: var(--muted-strong); line-height: 1.6; }
@@ -427,7 +449,7 @@ a:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
   .freshReport { padding: 0 1.1rem 1.1rem; }
   .freshReport .reportTopline { margin: 0 -1.1rem 1.5rem; padding-inline: 1.1rem; }
   .freshAssertion { grid-template-columns: 1fr; }
-  .metricGrid, .dashboardGrid, .formGrid { grid-template-columns: 1fr; }
+  .metricGrid, .dashboardGrid, .formGrid, .reviewContract { grid-template-columns: 1fr; }
   .formFooter { align-items: stretch; flex-direction: column; }
   .formFooter button { width: 100%; }
 }

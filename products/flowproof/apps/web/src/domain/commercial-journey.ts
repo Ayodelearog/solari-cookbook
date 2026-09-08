@@ -32,3 +32,19 @@ export const createJourneyResponseSchema = z.object({
   schemaVersion: z.literal("1"),
   journey: journeySummarySchema,
 });
+
+export const journeyDecisionRequestSchema = z.object({
+  schemaVersion: z.literal("1"),
+  decision: z.enum(["APPROVED", "REJECTED"]),
+  notes: boundedText(10, 1000),
+  confirmed: z.literal(true),
+});
+
+export type JourneyDecisionRequest = z.infer<typeof journeyDecisionRequestSchema>;
+
+export function assertReviewTransition(currentStatus: string, decision: JourneyDecisionRequest["decision"]) {
+  if (currentStatus !== "DRAFT_REVIEW") {
+    throw new Error(`A ${currentStatus} journey cannot be changed to ${decision}.`);
+  }
+  return decision;
+}

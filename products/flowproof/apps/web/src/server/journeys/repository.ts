@@ -1,8 +1,8 @@
 import { randomUUID } from "node:crypto";
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { getDb } from "@/db";
-import { environments, journeys, journeyVersions } from "@/db/schema";
-import type { CreateJourneyRequest } from "@/domain/commercial-journey";
+import { environments, journeyReviewDecisions, journeys, journeyVersions } from "@/db/schema";
+import { assertReviewTransition, type CreateJourneyRequest, type JourneyDecisionRequest } from "@/domain/commercial-journey";
 
 export async function createJourneyDraft(input: CreateJourneyRequest & { ownerKey: string; userId: string; baseUrl: string; hostname: string }) {
   const db = getDb();
@@ -83,4 +83,53 @@ export async function listOwnedJourneys(ownerKey: string) {
     environment: { name: row.environmentName, baseUrl: row.baseUrl, hostname: row.hostname },
     createdAt: row.createdAt.toISOString(),
   }));
+}
+
+export async function listJourneyReviewQueue() {
+  const rows = await getDb().select({
+    id: journeys.id,
+    ownerKey: journeys.ownerKey,
+    name: journeys.name,
+    businessPurpose: journeys.businessPurpose,
+    expectedOutcome: journeys.expectedOutcome,
+    status: journeys.status,
+    currentVersion: journeys.currentVersion,
+    environmentId: environments.id,
+    environmentName: environments.name,
+    baseUrl: environments.baseUrl,
+    hostname: environments.hostname,
+    syntheticDataConfirmed: environments.syntheticDataConfirmed,
+    createdAt: journeys.createdAt,
+  }).from(journeys).innerJoin(environments, eq(journeys.environmentId, environments.id))
+    .where(eq(journeys.status, "DRAFT_REVIEW")).orderBy(desc(journeys.createdAt)).limit(50);
+
+  return rows.map((row) => ({ ...row, createdAt: row.createdAt.toISOString() }));
+}
+
+export async function recordJourneyDecision(input: { journeyId: string; reviewerId: string } & JourneyDecisionRequest) {
+  const db = getDb();
+  const rows = await db.select({
+    status: journeys.status,
+    version: journeys.currentVersion,
+    environmentId: journeys.environmentId,
+  }).from(journeys).where(eq(journeys.id, input.journeyId)).limit(1);
+  const journey = rows[0];
+  if (!journey) throw new Error("Journey not found.");
+  const status = assertReviewTransition(journey.status, input.decision);
+  const now = new Date();
+
+  await db.batch([
+    db.update(journeys).set({ status, updatedAt: now }).where(and(eq(journeys.id, input.journeyId), eq(journeys.status, "DRAFT_REVIEW"))),
+    db.update(environments).set({ status, updatedAt: now }).where(eq(environments.id, journey.environmentId)),
+    db.insert(journeyReviewDecisions).values({
+      id: randomUUID(),
+      journeyId: input.journeyId,
+      journeyVersion: journey.version,
+      decision: status,
+      notes: input.notes,
+      reviewedBy: input.reviewerId,
+    }),
+  ]);
+
+  return { journeyId: input.journeyId, status, version: journey.version, reviewedAt: now.toISOString() };
 }

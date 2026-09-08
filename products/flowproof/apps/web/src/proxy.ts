@@ -1,9 +1,9 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-const isDashboardRoute = createRouteMatcher(["/dashboard(.*)"]);
+const isAuthenticatedPage = createRouteMatcher(["/dashboard(.*)", "/operator(.*)"]);
 
 export default clerkMiddleware(async (auth, request) => {
-  if (isDashboardRoute(request)) {
+  if (isAuthenticatedPage(request)) {
     const { userId, redirectToSignIn } = await auth();
     if (!userId) return redirectToSignIn({ returnBackUrl: request.url });
   }

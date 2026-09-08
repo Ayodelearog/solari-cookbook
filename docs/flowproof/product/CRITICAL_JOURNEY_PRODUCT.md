@@ -61,6 +61,14 @@ The next commercial capabilities are:
 - Email, Slack, and webhook alerts.
 - Run history, usage metering, limits, and billing.
 
+### Managed review slice
+
+FlowProof operators have a separate deny-by-default queue for submitted journey
+briefs. A confirmed decision records reviewer notes against the immutable
+journey version and changes the customer-visible status. Approval completes the
+safety review only; executable customer journeys still require a server-defined
+specification, synthetic credentials, effect allowlist, cleanup, and budgets.
+
 ### Commercial v1 acceptance
 
 An authenticated customer can submit an environment, business purpose, and exact

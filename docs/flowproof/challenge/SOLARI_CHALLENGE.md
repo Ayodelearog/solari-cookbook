@@ -116,5 +116,13 @@ explicitly require the entire business product to remain inside that fork.
 - Public deployment: https://flowproof-one.vercel.app. The homepage and PASS,
   FAIL, and INCONCLUSIVE evidence assets returned HTTP 200 and the production
   interface was inspected in-browser on 2026-09-03.
+- Commercial lifecycle proof: verified in production on 2026-09-09. An
+  authenticated customer submitted a synthetic FlowProof homepage brief, the
+  operator approved an immutable `PUBLIC_VISIBLE_TEXT_V1` contract, and the
+  customer ran it through the durable Solari path. The first attempt correctly
+  returned INCONCLUSIVE because Vercel installed an incompatible Playwright
+  client; after pinning `playwright-core` 1.62.1, the rerun returned PASS in 3.7
+  seconds with private screenshot evidence and remained in run history after a
+  refresh. This is internal product verification, not external-customer proof.
 - Customer proof: not collected.
 - Public tagged post: not published.

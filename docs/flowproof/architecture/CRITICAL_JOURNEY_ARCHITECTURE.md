@@ -66,6 +66,11 @@ executable specification is append-only and tied to the reviewed journey
 version. It is a safe first customer outcome, not the final multi-step journey
 builder.
 
+Solari's remote browser endpoint enforces Playwright protocol compatibility.
+The deployed `playwright-core` dependency is therefore pinned to the server's
+supported 1.62 line rather than using a semver range that may install an
+incompatible client during a Vercel build.
+
 ## Challenge-to-production boundary
 
 The first implementation may use deterministic fixtures and an in-process

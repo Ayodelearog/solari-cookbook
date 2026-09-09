@@ -3,7 +3,7 @@ import { failureTypeSchema, journeyOutcomeSchema } from "./journey";
 
 export const runJourneyRequestSchema = z.object({
   schemaVersion: z.literal("1"),
-  journeyId: z.literal("demo-purchase-persistence"),
+  journeyId: z.union([z.literal("demo-purchase-persistence"), z.string().uuid()]),
   idempotencyKey: z.string().uuid(),
   confirmed: z.literal(true),
 });
@@ -21,7 +21,7 @@ export const selfServiceStepSchema = z.object({
 export const selfServiceRunSchema = z.object({
   schemaVersion: z.literal("1"),
   runId: z.string().uuid(),
-  journeyId: z.literal("demo-purchase-persistence"),
+  journeyId: z.union([z.literal("demo-purchase-persistence"), z.string().uuid()]),
   journeyName: z.string().min(1),
   startedAt: z.string().datetime(),
   completedAt: z.string().datetime(),

@@ -65,9 +65,11 @@ The next commercial capabilities are:
 
 FlowProof operators have a separate deny-by-default queue for submitted journey
 briefs. A confirmed decision records reviewer notes against the immutable
-journey version and changes the customer-visible status. Approval completes the
-safety review only; executable customer journeys still require a server-defined
-specification, synthetic credentials, effect allowlist, cleanup, and budgets.
+journey version and changes the customer-visible status. Approval creates a
+server-defined executable specification only when the brief fits a supported
+contract. The first supported customer contract is deliberately read-only:
+open one approved public HTTPS page and verify exact visible text, with no
+credentials, clicks, recording, cleanup mutation, or model interpretation.
 
 ### Commercial v1 acceptance
 
@@ -75,7 +77,11 @@ An authenticated customer can submit an environment, business purpose, and exact
 successful outcome; explicitly confirm synthetic-only data and persistence;
 refresh the product and still see the tenant-owned journey in review; execute
 the approved reference journey; and see retained run history and private
-evidence. Customer-submitted journeys cannot execute before approval.
+evidence. Customer-submitted journeys cannot execute before approval. An
+approved read-only journey can be executed by its owning workspace and returns
+the same durable PASS, FAIL, or INCONCLUSIVE report as the reference journey.
+Richer journeys still require managed implementation of credentials, effects,
+cleanup, and assertions.
 
 ## Non-goals
 

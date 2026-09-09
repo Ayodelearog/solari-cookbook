@@ -22,6 +22,8 @@ export const journeySummarySchema = z.object({
   expectedOutcome: z.string(),
   status: z.enum(["DRAFT_REVIEW", "APPROVED", "REJECTED", "PAUSED"]),
   currentVersion: z.number().int().positive(),
+  runnable: z.boolean(),
+  executableExpected: z.string().nullable(),
   environment: z.object({ name: z.string(), baseUrl: z.string().url(), hostname: z.string() }),
   createdAt: z.string().datetime(),
 });
@@ -33,11 +35,33 @@ export const createJourneyResponseSchema = z.object({
   journey: journeySummarySchema,
 });
 
+export const publicVisibleTextSpecSchema = z.object({
+  schemaVersion: z.literal("1"),
+  template: z.literal("PUBLIC_VISIBLE_TEXT_V1"),
+  baseUrl: z.string().url(),
+  hostname: boundedText(1, 253),
+  expectedVisibleText: boundedText(3, 200),
+  timeoutMs: z.number().int().min(5_000).max(60_000),
+  allowedEffects: z.tuple([]),
+  dataPolicy: z.literal("synthetic-only"),
+  recording: z.literal(false),
+  cleanup: z.literal("none-read-only"),
+  maxAttempts: z.literal(1),
+});
+
+export type PublicVisibleTextSpec = z.infer<typeof publicVisibleTextSpecSchema>;
+
 export const journeyDecisionRequestSchema = z.object({
   schemaVersion: z.literal("1"),
   decision: z.enum(["APPROVED", "REJECTED"]),
   notes: boundedText(10, 1000),
+  expectedVisibleText: boundedText(3, 200).optional(),
+  timeoutMs: z.number().int().min(5_000).max(60_000).optional(),
   confirmed: z.literal(true),
+}).superRefine((value, context) => {
+  if (value.decision === "APPROVED" && (!value.expectedVisibleText || !value.timeoutMs)) {
+    context.addIssue({ code: "custom", message: "Approval requires an exact visible-text assertion and timeout." });
+  }
 });
 
 export type JourneyDecisionRequest = z.infer<typeof journeyDecisionRequestSchema>;

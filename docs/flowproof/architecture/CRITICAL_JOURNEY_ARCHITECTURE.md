@@ -57,6 +57,15 @@ redirect checks, declared effects, synthetic credentials, deterministic success
 assertions, cleanup, and resource budgets. A run always references an approved
 version; editing creates a new version and returns it to review.
 
+The first commercial executable template, `PUBLIC_VISIBLE_TEXT_V1`, is a
+restricted instance of that contract: it resolves the hostname before approval,
+allows navigation only to the exact approved HTTPS hostname, verifies one exact
+visible-text assertion, records no credentials, declares no effects or cleanup,
+disables recording, permits one attempt, and caps execution at 60 seconds. Its
+executable specification is append-only and tied to the reviewed journey
+version. It is a safe first customer outcome, not the final multi-step journey
+builder.
+
 ## Challenge-to-production boundary
 
 The first implementation may use deterministic fixtures and an in-process

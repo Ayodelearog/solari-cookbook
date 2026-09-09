@@ -92,3 +92,12 @@ export const journeyReviewDecisions = pgTable("flowproof_journey_review_decision
   reviewedBy: text("reviewed_by").notNull(),
   createdAt: timestamp("created_at", { withTimezone: true, mode: "date" }).defaultNow().notNull(),
 }, (table) => [uniqueIndex("flowproof_journey_review_decisions_version_idx").on(table.journeyId, table.journeyVersion)]);
+
+export const executableJourneySpecs = pgTable("flowproof_executable_journey_specs", {
+  id: uuid("id").primaryKey(),
+  journeyId: uuid("journey_id").notNull().references(() => journeys.id, { onDelete: "cascade" }),
+  journeyVersion: integer("journey_version").notNull(),
+  specification: jsonb("specification").notNull(),
+  createdBy: text("created_by").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true, mode: "date" }).defaultNow().notNull(),
+}, (table) => [uniqueIndex("flowproof_executable_journey_specs_version_idx").on(table.journeyId, table.journeyVersion)]);

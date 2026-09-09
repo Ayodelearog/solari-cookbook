@@ -1,11 +1,15 @@
 import { put } from "@vercel/blob";
 import { selfServiceRunSchema } from "@/domain/self-service-run";
-import { completeRun, markRunRunning } from "./repository";
+import { completeRun, getRunExecutionDefinition, markRunRunning } from "./repository";
 import { runDemoJourney } from "@/server/solari/run-demo-journey";
+import { runVisibleTextJourney } from "@/server/solari/run-visible-text-journey";
 
 export async function executeAndPersistRun(runId: string, apiKey: string) {
   await markRunRunning(runId);
-  const execution = await runDemoJourney(apiKey, runId);
+  const definition = await getRunExecutionDefinition(runId);
+  const execution = definition.kind === "demo"
+    ? await runDemoJourney(apiKey, runId)
+    : await runVisibleTextJourney({ apiKey, runId, ...definition });
   const { screenshotDataUrl, ...publicResult } = execution;
   const result = selfServiceRunSchema.parse(publicResult);
   let storedEvidence: { id: string; blobUrl: string; pathname: string; sizeBytes: number } | undefined;

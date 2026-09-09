@@ -1,11 +1,32 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { queuedRunSchema, runStatusResponseSchema, type SelfServiceRun } from "@/domain/self-service-run";
 
 type RunState = "idle" | "confirming" | "running" | "complete" | "error";
-const activeRunStorageKey = "flowproof.activeRunId";
+
+export type RunnableJourney = {
+  id: string;
+  name: string;
+  description: string;
+  target: string;
+  actions: string;
+  expected: string;
+  environment: string;
+  kind: "reference" | "customer";
+};
+
+const referenceJourney: RunnableJourney = {
+  id: "demo-purchase-persistence",
+  name: "Purchase persistence",
+  description: "Sign in, add one product, refresh the cart, and verify that the selected product remains.",
+  target: "saucedemo.com",
+  actions: "Login · add product · refresh",
+  expected: "Sauce Labs Backpack persists",
+  environment: "Synthetic environment",
+  kind: "reference",
+};
 
 async function waitForRun(runId: string) {
   const deadline = Date.now() + 120_000;
@@ -20,10 +41,12 @@ async function waitForRun(runId: string) {
   throw new Error("The run is still processing. Reload this page to reconnect to its persisted report.");
 }
 
-export function RunConsole() {
+export function RunConsole({ journey = referenceJourney }: { journey?: RunnableJourney }) {
+  const activeRunStorageKey = `flowproof.activeRunId.${journey.id}`;
   const [state, setState] = useState<RunState>("idle");
   const [run, setRun] = useState<SelfServiceRun | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const cancelRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const activeRunId = window.localStorage.getItem(activeRunStorageKey);
@@ -38,7 +61,11 @@ export function RunConsole() {
       setError(statusError instanceof Error ? statusError.message : "The persisted run could not be retrieved.");
       setState("error");
     });
-  }, []);
+  }, [activeRunStorageKey]);
+
+  useEffect(() => {
+    if (state === "confirming") cancelRef.current?.focus();
+  }, [state]);
 
   const execute = async () => {
     setState("running");
@@ -49,7 +76,7 @@ export function RunConsole() {
       const response = await fetch("/api/runs", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ schemaVersion: "1", journeyId: "demo-purchase-persistence", idempotencyKey, confirmed: true }),
+        body: JSON.stringify({ schemaVersion: "1", journeyId: journey.id, idempotencyKey, confirmed: true }),
       });
       const body: unknown = await response.json();
       if (!response.ok) {
@@ -73,21 +100,21 @@ export function RunConsole() {
 
   return (
     <div className="consoleShell">
-      <section className="journeyConsole" aria-labelledby="journey-title">
-        <div className="consoleTopline"><span>Approved demo journey</span><span>Solari cloud browser</span></div>
+      <section className="journeyConsole" aria-labelledby={`journey-title-${journey.id}`}>
+        <div className="consoleTopline"><span>{journey.kind === "reference" ? "Approved demo journey" : "Approved customer journey"}</span><span>Solari cloud browser</span></div>
         <div className="consoleHeading">
           <div>
             <p className="eyebrow">Self-service runner</p>
-            <h1 id="journey-title">Purchase persistence</h1>
-            <p>Sign in, add one product, refresh the cart, and verify that the selected product remains.</p>
+            <h2 id={`journey-title-${journey.id}`}>{journey.name}</h2>
+            <p>{journey.description}</p>
           </div>
-          <span className="environmentBadge">Synthetic environment</span>
+          <span className="environmentBadge">{journey.environment}</span>
         </div>
 
         <dl className="journeyContract">
-          <div><dt>Target</dt><dd>saucedemo.com</dd></div>
-          <div><dt>Actions</dt><dd>Login · add product · refresh</dd></div>
-          <div><dt>Expected</dt><dd>Sauce Labs Backpack persists</dd></div>
+          <div><dt>Target</dt><dd>{journey.target}</dd></div>
+          <div><dt>Actions</dt><dd>{journey.actions}</dd></div>
+          <div><dt>Expected</dt><dd>{journey.expected}</dd></div>
           <div><dt>Recording</dt><dd>Off</dd></div>
         </dl>
 
@@ -101,12 +128,12 @@ export function RunConsole() {
 
       {state === "confirming" && (
         <div className="dialogBackdrop" role="presentation">
-          <section aria-describedby="run-confirmation-copy" aria-labelledby="run-confirmation-title" aria-modal="true" className="confirmDialog" role="dialog">
+          <section aria-describedby="run-confirmation-copy" aria-labelledby="run-confirmation-title" aria-modal="true" className="confirmDialog" onKeyDown={(event) => { if (event.key === "Escape") setState("idle"); }} role="dialog">
             <p className="eyebrow">Confirm live execution</p>
-            <h2 id="run-confirmation-title">Run this approved journey?</h2>
-            <p id="run-confirmation-copy">FlowProof will start a Solari cloud browser, sign in with a public synthetic account, and add one product to its cart. No purchase is made.</p>
+            <h2 id="run-confirmation-title">Run {journey.name}?</h2>
+            <p id="run-confirmation-copy">{journey.kind === "reference" ? "FlowProof will start a Solari cloud browser, sign in with a public synthetic account, and add one product to its cart. No purchase is made." : `FlowProof will open ${journey.target} in a Solari cloud browser and verify the approved visible-text assertion. It will not enter credentials, click, submit, or record the session.`}</p>
             <div className="dialogActions">
-              <button className="secondaryButton" onClick={() => setState("idle")} type="button">Cancel</button>
+              <button ref={cancelRef} className="secondaryButton" onClick={() => setState("idle")} type="button">Cancel</button>
               <button onClick={execute} type="button">Confirm and run</button>
             </div>
           </section>

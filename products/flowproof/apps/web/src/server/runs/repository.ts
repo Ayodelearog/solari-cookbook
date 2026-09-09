@@ -1,6 +1,7 @@
-import { and, asc, desc, eq } from "drizzle-orm";
+import { and, asc, desc, eq, sql } from "drizzle-orm";
 import { getDb } from "@/db";
-import { evidence, runs, stepResults } from "@/db/schema";
+import { evidence, executableJourneySpecs, journeys, runs, stepResults } from "@/db/schema";
+import { publicVisibleTextSpecSchema } from "@/domain/commercial-journey";
 import { selfServiceRunSchema, type SelfServiceRun } from "@/domain/self-service-run";
 
 export const demoJourney = {
@@ -8,25 +9,30 @@ export const demoJourney = {
   version: "1",
   name: "Purchase path keeps the selected product after refresh",
   expected: "Sauce Labs Backpack remains in the cart after refresh.",
+  browserConfiguration: { provider: "solari", recording: false, maxAttempts: 2, template: "DEMO_PURCHASE_PERSISTENCE_V1" },
 };
 
 export type RunOwner = { ownerKey: string; userId: string; orgId: string | null };
 
-export async function createRun(input: RunOwner & { runId: string; idempotencyKey: string }) {
+export async function createRun(input: RunOwner & { runId: string; idempotencyKey: string; journeyId: string }) {
   const db = getDb();
+  const definition = input.journeyId === demoJourney.id
+    ? demoJourney
+    : await getOwnedRunnableJourney(input.journeyId, input.ownerKey);
+  if (!definition) throw new Error("This journey is not approved for execution.");
   const inserted = await db.insert(runs).values({
     id: input.runId,
     ownerKey: input.ownerKey,
     userId: input.userId,
     orgId: input.orgId,
-    journeyId: demoJourney.id,
-    journeyVersion: demoJourney.version,
+    journeyId: definition.id,
+    journeyVersion: definition.version,
     idempotencyKey: input.idempotencyKey,
     state: "CREATED",
-    journeyName: demoJourney.name,
-    expected: demoJourney.expected,
+    journeyName: definition.name,
+    expected: definition.expected,
     runnerVersion: "flowproof-solari-v1",
-    browserConfiguration: { provider: "solari", recording: false, retries: 1, probe: true },
+    browserConfiguration: definition.browserConfiguration,
   }).onConflictDoNothing({ target: [runs.ownerKey, runs.idempotencyKey] }).returning({ id: runs.id, state: runs.state });
 
   if (inserted[0]) return { ...inserted[0], created: true };
@@ -34,6 +40,46 @@ export async function createRun(input: RunOwner & { runId: string; idempotencyKe
     .where(and(eq(runs.ownerKey, input.ownerKey), eq(runs.idempotencyKey, input.idempotencyKey))).limit(1);
   if (!existing[0]) throw new Error("The idempotent run could not be resolved.");
   return { ...existing[0], created: false };
+}
+
+async function getOwnedRunnableJourney(journeyId: string, ownerKey: string) {
+  const rows = await getDb().select({
+    id: journeys.id,
+    version: journeys.currentVersion,
+    name: journeys.name,
+    status: journeys.status,
+    specification: executableJourneySpecs.specification,
+  }).from(journeys).innerJoin(executableJourneySpecs, and(
+    eq(executableJourneySpecs.journeyId, journeys.id),
+    eq(executableJourneySpecs.journeyVersion, journeys.currentVersion),
+  )).where(and(eq(journeys.id, journeyId), eq(journeys.ownerKey, ownerKey))).limit(1);
+  const row = rows[0];
+  if (!row || row.status !== "APPROVED") return null;
+  const specification = publicVisibleTextSpecSchema.parse(row.specification);
+  return {
+    id: row.id,
+    version: String(row.version),
+    name: row.name,
+    expected: specification.expectedVisibleText,
+    browserConfiguration: { provider: "solari", recording: specification.recording, maxAttempts: specification.maxAttempts, template: specification.template },
+  };
+}
+
+export async function getRunExecutionDefinition(runId: string) {
+  const rows = await getDb().select({
+    journeyId: runs.journeyId,
+    journeyVersion: runs.journeyVersion,
+    journeyName: runs.journeyName,
+    specification: executableJourneySpecs.specification,
+  }).from(runs).leftJoin(executableJourneySpecs, and(
+    sql`${executableJourneySpecs.journeyId}::text = ${runs.journeyId}`,
+    sql`${executableJourneySpecs.journeyVersion}::text = ${runs.journeyVersion}`,
+  )).where(eq(runs.id, runId)).limit(1);
+  const row = rows[0];
+  if (!row) throw new Error("Run not found.");
+  if (row.journeyId === demoJourney.id) return { kind: "demo" as const };
+  if (!row.specification) throw new Error("The approved executable specification was not found.");
+  return { kind: "public-visible-text" as const, journeyId: row.journeyId, journeyName: row.journeyName, specification: publicVisibleTextSpecSchema.parse(row.specification) };
 }
 
 export async function queueRun(runId: string, workflowRunId: string) {

@@ -6,6 +6,7 @@ export type JourneyOutcome = z.infer<typeof journeyOutcomeSchema>;
 export const failureTypeSchema = z.enum([
   "PRODUCT_ASSERTION",
   "THIRD_PARTY",
+  "POLICY",
   "RUNNER_INFRASTRUCTURE",
   "UNKNOWN",
 ]);

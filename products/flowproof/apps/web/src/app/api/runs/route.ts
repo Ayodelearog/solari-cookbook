@@ -20,7 +20,13 @@ export async function POST(request: Request) {
   if (!process.env.SOLARI_API_KEY) return Response.json({ error: "Live execution is not configured on this environment." }, { status: 503 });
 
   const ownerKey = orgId ?? userId;
-  const record = await createRun({ runId: randomUUID(), idempotencyKey: parsed.data.idempotencyKey, ownerKey, userId, orgId: orgId ?? null });
+  let record;
+  try {
+    record = await createRun({ runId: randomUUID(), journeyId: parsed.data.journeyId, idempotencyKey: parsed.data.idempotencyKey, ownerKey, userId, orgId: orgId ?? null });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "The journey is not available for execution.";
+    return Response.json({ error: message }, { status: 403 });
+  }
   if (record.created) {
     try {
       const workflow = await start(runJourneyWorkflow, [record.id]);

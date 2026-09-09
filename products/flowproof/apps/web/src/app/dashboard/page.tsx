@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { UserButton } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
-import { RunConsole } from "./run-console";
+import { RunConsole, type RunnableJourney } from "./run-console";
 import { JourneyOnboarding } from "./journey-onboarding";
 import { listOwnedJourneys } from "@/server/journeys/repository";
 import { listOwnedRunSummaries } from "@/server/runs/repository";
@@ -19,6 +19,16 @@ export default async function DashboardPage() {
   const [journeys, recentRuns] = await Promise.all([listOwnedJourneys(ownerKey), listOwnedRunSummaries(ownerKey)]);
   const passedRuns = recentRuns.filter((run) => run.outcome === "PASS").length;
   const completedRuns = recentRuns.filter((run) => run.outcome).length;
+  const runnableJourneys: RunnableJourney[] = journeys.filter((journey) => journey.runnable).map((journey) => ({
+    id: journey.id,
+    name: journey.name,
+    description: journey.businessPurpose,
+    target: journey.environment.hostname,
+    actions: "Open page · verify exact visible text",
+    expected: journey.executableExpected ?? journey.expectedOutcome,
+    environment: journey.environment.name,
+    kind: "customer",
+  }));
 
   return (
     <main className="dashboardPage">
@@ -56,7 +66,7 @@ export default async function DashboardPage() {
             {journeys.map((journey) => (
               <article className="journeyListItem" key={journey.id}>
                 <div><span className="reviewStatus" data-status={journey.status}>{journey.status === "DRAFT_REVIEW" ? "IN REVIEW" : journey.status}</span><h3>{journey.name}</h3><p>{journey.environment.hostname} · {journey.environment.name}</p></div>
-                <small>Version {journey.currentVersion}</small>
+                <small>{journey.runnable ? "Runnable now" : `Version ${journey.currentVersion}`}</small>
               </article>
             ))}
             {journeys.length === 0 && <p className="emptyHint">Your first submitted journey will appear here with its review status.</p>}
@@ -65,6 +75,9 @@ export default async function DashboardPage() {
 
         <section className="sectionDivider"><p className="eyebrow">Approved execution</p><h2>Run a live reference journey</h2><p>This allowlisted journey proves the complete FlowProof path: authenticated request, durable Solari execution, persisted result, and private evidence.</p></section>
         <RunConsole />
+
+        {runnableJourneys.length > 0 ? <section className="sectionDivider"><p className="eyebrow">Customer execution</p><h2>Run your approved journeys</h2><p>Each journey below is bound to the exact domain, assertion, timeout, and read-only policy approved by FlowProof.</p></section> : null}
+        {runnableJourneys.map((journey) => <RunConsole journey={journey} key={journey.id} />)}
 
         <section className="historyCard" aria-labelledby="history-title">
           <div className="panelHeading"><div><p className="eyebrow">Audit trail</p><h2 id="history-title">Recent runs</h2></div><span>Last 10</span></div>

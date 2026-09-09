@@ -11,7 +11,7 @@ export async function PATCH(request: Request, context: { params: Promise<{ journ
   if (!isFlowProofOperator(userId)) return Response.json({ error: "Forbidden" }, { status: 403 });
   const body: unknown = await request.json().catch(() => null);
   const parsed = journeyDecisionRequestSchema.safeParse(body);
-  if (!parsed.success) return Response.json({ error: "A confirmed decision and review notes are required." }, { status: 400 });
+  if (!parsed.success) return Response.json({ error: "A confirmed decision, review notes, and approval assertion are required." }, { status: 400 });
 
   try {
     const { journeyId } = await context.params;

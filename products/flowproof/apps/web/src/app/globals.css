@@ -335,8 +335,12 @@ button { font: inherit; }
 .reviewContract dd { overflow-wrap: anywhere; font-size: .8rem; line-height: 1.5; }
 .reviewContract a { color: var(--accent-strong); }
 .reviewCard label { display: grid; gap: .45rem; color: var(--ink-soft); font-size: .76rem; font-weight: 680; }
-.reviewCard textarea { width: 100%; padding: .72rem .78rem; border: 1px solid var(--line-strong); border-radius: .55rem; color: var(--ink); background: var(--surface-raised); font: inherit; font-size: .84rem; resize: vertical; outline: none; }
-.reviewCard textarea:focus { border-color: var(--focus); box-shadow: 0 0 0 3px rgba(37,99,235,.12); }
+.reviewCard input, .reviewCard select, .reviewCard textarea { width: 100%; padding: .72rem .78rem; border: 1px solid var(--line-strong); border-radius: .55rem; color: var(--ink); background: var(--surface-raised); font: inherit; font-size: .84rem; resize: vertical; outline: none; }
+.reviewCard input:focus, .reviewCard select:focus, .reviewCard textarea:focus { border-color: var(--focus); box-shadow: 0 0 0 3px rgba(37,99,235,.12); }
+.supportedContract { display: grid; gap: .5rem; margin: 1rem 0; padding: .9rem; border: 1px solid var(--line); border-radius: .7rem; background: var(--canvas); }
+.supportedContract > div { display: flex; align-items: center; gap: .65rem; flex-wrap: wrap; }
+.supportedContract p { margin: 0; color: var(--muted); font-size: .74rem; line-height: 1.5; }
+.reviewCard label + label { margin-top: 1rem; }
 .reviewActions { justify-content: flex-end; margin-top: 1rem; }
 .reviewActions button { padding: .72rem .9rem; border: 0; border-radius: .6rem; color: #fff; background: var(--accent-strong); font-weight: 700; cursor: pointer; }
 .reviewActions .secondaryButton { border: 1px solid var(--line); color: var(--danger); background: var(--surface-raised); }
@@ -354,7 +358,7 @@ button { font: inherit; }
 .journeyConsole, .freshReport { overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.9); border-radius: 1.25rem; background: rgba(255, 255, 255, 0.86); box-shadow: var(--shadow-report); }
 .consoleTopline { display: flex; justify-content: space-between; gap: 1rem; padding: 0.85rem 1.5rem; border-bottom: 1px solid var(--line); color: var(--muted); background: rgba(235, 240, 234, 0.5); font-size: 0.72rem; font-weight: 620; }
 .consoleHeading { display: flex; align-items: flex-start; justify-content: space-between; gap: 2rem; padding: 2rem 2rem 1.5rem; }
-.consoleHeading h1 { margin-bottom: 0.8rem; font-size: clamp(2.25rem, 5vw, 4rem); }
+.consoleHeading h1, .consoleHeading h2 { margin-bottom: 0.8rem; font-size: clamp(2.25rem, 5vw, 4rem); }
 .consoleHeading p:last-child { max-width: 37rem; margin: 0; color: var(--muted-strong); line-height: 1.6; }
 .environmentBadge { flex: none; padding: 0.5rem 0.65rem; border: 1px solid var(--line); border-radius: 999px; color: var(--muted-strong); background: var(--canvas); font-size: 0.7rem; font-weight: 700; }
 .journeyContract { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin: 0 2rem; padding: 1.25rem 0; border-block: 1px solid var(--line); }

@@ -38,7 +38,7 @@ complete infrastructure:
 - Evidence: step timeline, durations, observed state, screenshots, and a redacted
   replay when safe.
 - Failure demo: inject a controlled persistence regression and classify it.
-- Output: PASS, FAIL, or INCONCLUSIVE—not an invented quality score.
+- Output: PASS, FAIL, or INCONCLUSIVE, not an invented quality score.
 
 This is the same core artifact a paying customer receives, not a throwaway demo.
 

@@ -74,7 +74,7 @@ export function JourneyOnboarding() {
         <label>Journey name<input required minLength={3} maxLength={100} placeholder="Customer completes checkout" value={draft.journeyName} onChange={(event) => update("journeyName", event.target.value)} /></label>
         <label>Why this journey matters<textarea required minLength={10} maxLength={500} placeholder="Revenue is lost when customers cannot complete this path." rows={3} value={draft.businessPurpose} onChange={(event) => update("businessPurpose", event.target.value)} /></label>
         <label>Exact successful outcome<textarea required minLength={10} maxLength={500} placeholder="The order confirmation appears with the expected item and total." rows={3} value={draft.expectedOutcome} onChange={(event) => update("expectedOutcome", event.target.value)} /></label>
-        <label className="checkboxLabel"><input required checked={draft.syntheticDataConfirmed} type="checkbox" onChange={(event) => update("syntheticDataConfirmed", event.target.checked)} /><span>I will provide only synthetic test identities and data—never real customer data.</span></label>
+        <label className="checkboxLabel"><input required checked={draft.syntheticDataConfirmed} type="checkbox" onChange={(event) => update("syntheticDataConfirmed", event.target.checked)} /><span>I will provide only synthetic test identities and data, never real customer data.</span></label>
         <div className="formFooter"><p>No browser run starts from this submission.</p><button type="submit">Review submission</button></div>
       </form>
       {message && <p aria-live="polite" className="formMessage">{message}</p>}

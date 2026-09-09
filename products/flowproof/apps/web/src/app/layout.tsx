@@ -7,7 +7,7 @@ const geist = Geist({ variable: "--font-geist", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "FlowProof — Critical journey assurance",
+  title: "FlowProof | Critical journey assurance",
   description: "Verify the customer journeys your business cannot afford to break.",
 };
 

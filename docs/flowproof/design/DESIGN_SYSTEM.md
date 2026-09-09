@@ -4,8 +4,8 @@
 
 FlowProof should feel like a calm reliability engineer presenting evidence:
 precise, quiet, responsive, and trustworthy. Beauty is leverage, but the data
-must never move merely for decoration. The interface borrows principles—not
-visual branding—from Emil Kowalski's public design-engineering guidance.
+must never move merely for decoration. The interface borrows principles from
+Emil Kowalski's public design-engineering guidance without copying visual branding.
 
 ## Audit translated into decisions
 
@@ -55,6 +55,17 @@ visual branding—from Emil Kowalski's public design-engineering guidance.
   opaque, clearly bordered surface.
 
 ## Component rules
+
+### Surface separation
+
+- `/` is the public product site. It explains the problem, value, workflow,
+  evidence model, current scope, and next action without requiring sign-in.
+- `/dashboard` is the authenticated customer workspace for submitting, reviewing,
+  running, and inspecting journeys.
+- `/operator` is an authenticated operational control surface and is not exposed
+  in public marketing navigation.
+- The brand returns to the public site, while the primary product action opens
+  the dashboard.
 
 ### Outcome card
 

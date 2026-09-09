@@ -5,7 +5,7 @@ import { listJourneyReviewQueue } from "@/server/journeys/repository";
 import { isFlowProofOperator } from "@/server/operators";
 import { ReviewQueue } from "./review-queue";
 
-export const metadata = { title: "Journey reviews — FlowProof" };
+export const metadata = { title: "Journey reviews | FlowProof" };
 
 export default async function OperatorPage() {
   const { userId } = await auth();

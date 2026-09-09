@@ -8,7 +8,7 @@ import { listOwnedRunSummaries } from "@/server/runs/repository";
 import { isFlowProofOperator } from "@/server/operators";
 
 export const metadata = {
-  title: "Run a journey — FlowProof",
+  title: "Run a journey | FlowProof",
   description: "Run an approved customer journey in a live Solari cloud browser.",
 };
 
@@ -52,7 +52,7 @@ export default async function DashboardPage() {
         <section className="metricGrid" aria-label="Workspace summary">
           <div><span>Customer journeys</span><strong>{journeys.length + 1}</strong><small>1 approved reference journey</small></div>
           <div><span>Runs retained</span><strong>{recentRuns.length}</strong><small>Private to this workspace</small></div>
-          <div><span>Pass rate</span><strong>{completedRuns ? `${Math.round((passedRuns / completedRuns) * 100)}%` : "—"}</strong><small>{completedRuns ? `${completedRuns} completed run${completedRuns === 1 ? "" : "s"}` : "No completed runs yet"}</small></div>
+          <div><span>Pass rate</span><strong>{completedRuns ? `${Math.round((passedRuns / completedRuns) * 100)}%` : "Not set"}</strong><small>{completedRuns ? `${completedRuns} completed run${completedRuns === 1 ? "" : "s"}` : "No completed runs yet"}</small></div>
         </section>
 
         <div className="dashboardGrid">

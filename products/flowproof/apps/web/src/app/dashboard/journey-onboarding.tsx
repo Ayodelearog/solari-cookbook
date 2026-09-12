@@ -24,6 +24,7 @@ const initialDraft: Draft = {
 export function JourneyOnboarding() {
   const router = useRouter();
   const [draft, setDraft] = useState(initialDraft);
+  const [expanded, setExpanded] = useState(false);
   const [confirming, setConfirming] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
@@ -48,6 +49,7 @@ export function JourneyOnboarding() {
         throw new Error(error);
       }
       setDraft(initialDraft);
+      setExpanded(false);
       setConfirming(false);
       setMessage("Journey submitted for safety and test-design review.");
       router.refresh();
@@ -60,23 +62,28 @@ export function JourneyOnboarding() {
   };
 
   return (
-    <section className="onboardingCard" aria-labelledby="onboarding-title">
-      <div className="panelHeading">
-        <div><p className="eyebrow">Managed onboarding</p><h2 id="onboarding-title">Add a critical journey</h2></div>
-        <span className="environmentBadge">Review before execution</span>
+    <section className="onboardingCard compactOnboarding" aria-labelledby="onboarding-title">
+      <div className="onboardingPrompt">
+        <div>
+          <p className="eyebrow">New journey</p>
+          <h2 id="onboarding-title">What should FlowProof check?</h2>
+          <p>Submit one customer outcome for safe setup and review.</p>
+        </div>
+        <button aria-controls="journey-brief-form" aria-expanded={expanded} className="secondaryButton" onClick={() => setExpanded((current) => !current)} type="button">
+          {expanded ? "Close form" : "Add journey"}
+        </button>
       </div>
-      <p className="panelCopy">Tell us what must keep working. FlowProof turns this brief into a safe, approved browser journey with explicit assertions.</p>
-      <form onSubmit={(event) => { event.preventDefault(); setConfirming(true); window.setTimeout(() => cancelRef.current?.focus(), 0); }}>
+      {expanded ? <form id="journey-brief-form" onSubmit={(event) => { event.preventDefault(); setConfirming(true); window.setTimeout(() => cancelRef.current?.focus(), 0); }}>
         <div className="formGrid">
-          <label>Environment name<input required maxLength={80} placeholder="Production storefront" value={draft.environmentName} onChange={(event) => update("environmentName", event.target.value)} /></label>
-          <label>Website base URL<input required maxLength={2048} placeholder="https://example.com" type="url" value={draft.baseUrl} onChange={(event) => update("baseUrl", event.target.value)} /></label>
+          <label>Environment<input required maxLength={80} placeholder="Production storefront" value={draft.environmentName} onChange={(event) => update("environmentName", event.target.value)} /></label>
+          <label>Website URL<input required maxLength={2048} placeholder="https://example.com" type="url" value={draft.baseUrl} onChange={(event) => update("baseUrl", event.target.value)} /></label>
         </div>
         <label>Journey name<input required minLength={3} maxLength={100} placeholder="Customer completes checkout" value={draft.journeyName} onChange={(event) => update("journeyName", event.target.value)} /></label>
-        <label>Why this journey matters<textarea required minLength={10} maxLength={500} placeholder="Revenue is lost when customers cannot complete this path." rows={3} value={draft.businessPurpose} onChange={(event) => update("businessPurpose", event.target.value)} /></label>
-        <label>Exact successful outcome<textarea required minLength={10} maxLength={500} placeholder="The order confirmation appears with the expected item and total." rows={3} value={draft.expectedOutcome} onChange={(event) => update("expectedOutcome", event.target.value)} /></label>
-        <label className="checkboxLabel"><input required checked={draft.syntheticDataConfirmed} type="checkbox" onChange={(event) => update("syntheticDataConfirmed", event.target.checked)} /><span>I will provide only synthetic test identities and data, never real customer data.</span></label>
-        <div className="formFooter"><p>No browser run starts from this submission.</p><button type="submit">Review submission</button></div>
-      </form>
+        <label>Why it matters<textarea required minLength={10} maxLength={500} placeholder="Revenue is lost when customers cannot complete this path." rows={2} value={draft.businessPurpose} onChange={(event) => update("businessPurpose", event.target.value)} /></label>
+        <label>Successful outcome<textarea required minLength={10} maxLength={500} placeholder="The order confirmation appears with the expected item and total." rows={2} value={draft.expectedOutcome} onChange={(event) => update("expectedOutcome", event.target.value)} /></label>
+        <label className="checkboxLabel"><input required checked={draft.syntheticDataConfirmed} type="checkbox" onChange={(event) => update("syntheticDataConfirmed", event.target.checked)} /><span>I will use synthetic data only.</span></label>
+        <div className="formFooter"><p>Submission does not start a browser run.</p><button type="submit">Review submission</button></div>
+      </form> : null}
       {message && <p aria-live="polite" className="formMessage">{message}</p>}
 
       {confirming && (

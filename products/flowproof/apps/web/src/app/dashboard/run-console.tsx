@@ -100,30 +100,28 @@ export function RunConsole({ journey = referenceJourney }: { journey?: RunnableJ
 
   return (
     <div className="consoleShell">
-      <section className="journeyConsole" aria-labelledby={`journey-title-${journey.id}`}>
-        <div className="consoleTopline"><span>{journey.kind === "reference" ? "Approved demo journey" : "Approved customer journey"}</span><span>Solari cloud browser</span></div>
-        <div className="consoleHeading">
+      <section className="journeyConsole compactConsole" aria-labelledby={`journey-title-${journey.id}`}>
+        <div className="compactConsoleMain">
           <div>
-            <p className="eyebrow">Self-service runner</p>
+            <div className="compactConsoleMeta"><span className="reviewStatus" data-status="APPROVED">APPROVED</span><span>{journey.environment}</span></div>
             <h2 id={`journey-title-${journey.id}`}>{journey.name}</h2>
             <p>{journey.description}</p>
           </div>
-          <span className="environmentBadge">{journey.environment}</span>
-        </div>
-
-        <dl className="journeyContract">
-          <div><dt>Target</dt><dd>{journey.target}</dd></div>
-          <div><dt>Actions</dt><dd>{journey.actions}</dd></div>
-          <div><dt>Expected</dt><dd>{journey.expected}</dd></div>
-          <div><dt>Recording</dt><dd>Off</dd></div>
-        </dl>
-
-        <div className="consoleAction">
-          <div><strong>Ready to run</strong><span>A live run normally completes in 10–30 seconds and consumes Solari usage.</span></div>
           <button disabled={state === "running"} onClick={() => setState("confirming")} type="button">
             {state === "running" ? "Running…" : "Run journey"}
           </button>
         </div>
+
+        <details className="runDetails">
+          <summary>View run details</summary>
+          <dl className="journeyContract">
+            <div><dt>Target</dt><dd>{journey.target}</dd></div>
+            <div><dt>Actions</dt><dd>{journey.actions}</dd></div>
+            <div><dt>Expected</dt><dd>{journey.expected}</dd></div>
+            <div><dt>Recording</dt><dd>Off</dd></div>
+          </dl>
+          <p>A live run normally completes in 10–30 seconds and consumes Solari usage.</p>
+        </details>
       </section>
 
       {state === "confirming" && (

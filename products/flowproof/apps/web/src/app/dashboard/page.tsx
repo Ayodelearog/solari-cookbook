@@ -37,51 +37,45 @@ export default async function DashboardPage() {
           <Link className="brand" href="/"><span className="brandMark" aria-hidden="true">F</span>FlowProof</Link>
           <div className="dashboardNavActions">
             {isFlowProofOperator(userId) ? <Link className="navLink" href="/operator">Review queue</Link> : null}
-            <Link className="navLink" href="/#evidence">Reference evidence <span aria-hidden="true">↗</span></Link>
+            <Link className="navLink" href="/">Product site</Link>
             <UserButton />
           </div>
         </nav>
       </header>
       <div className="dashboardIntro">
-        <div className="workspaceLabel"><span className="liveDot" />{orgId ? "Organization workspace" : "Personal workspace"}</div>
-        <p className="eyebrow">Journey assurance workspace</p>
-        <h2>Know your critical paths still work.</h2>
-        <p>Define revenue-critical customer journeys, approve their safety boundaries, run them in real browsers, and retain decision-ready proof.</p>
+        <div>
+          <div className="workspaceLabel"><span className="liveDot" />{orgId ? "Organization workspace" : "Personal workspace"}</div>
+          <h1>Your journeys</h1>
+          <p>Run an approved customer path or add the next one you need to protect.</p>
+        </div>
+        <dl className="dashboardStats" aria-label="Workspace summary">
+          <div><dt>Journeys</dt><dd>{journeys.length + 1}</dd></div>
+          <div><dt>Recent runs</dt><dd>{recentRuns.length}</dd></div>
+          <div><dt>Pass rate</dt><dd>{completedRuns ? `${Math.round((passedRuns / completedRuns) * 100)}%` : "Not set"}</dd></div>
+        </dl>
       </div>
       <div className="commercialShell">
-        <section className="metricGrid" aria-label="Workspace summary">
-          <div><span>Customer journeys</span><strong>{journeys.length + 1}</strong><small>1 approved reference journey</small></div>
-          <div><span>Runs retained</span><strong>{recentRuns.length}</strong><small>Private to this workspace</small></div>
-          <div><span>Pass rate</span><strong>{completedRuns ? `${Math.round((passedRuns / completedRuns) * 100)}%` : "Not set"}</strong><small>{completedRuns ? `${completedRuns} completed run${completedRuns === 1 ? "" : "s"}` : "No completed runs yet"}</small></div>
+        <JourneyOnboarding />
+
+        <section className="runnableSection" aria-labelledby="ready-title">
+          <div className="dashboardSectionHeading">
+            <div><p className="eyebrow">Ready</p><h2 id="ready-title">Run a journey</h2></div>
+            <p>Every run uses its approved target and success condition.</p>
+          </div>
+          <div className="runnerList">
+            <RunConsole />
+            {runnableJourneys.map((journey) => <RunConsole journey={journey} key={journey.id} />)}
+          </div>
         </section>
 
-        <div className="dashboardGrid">
-          <JourneyOnboarding />
-          <section className="journeyListCard" aria-labelledby="journeys-title">
-            <div className="panelHeading"><div><p className="eyebrow">Portfolio</p><h2 id="journeys-title">Your journeys</h2></div><span>{journeys.length + 1} total</span></div>
-            <article className="journeyListItem">
-              <div><span className="status">APPROVED</span><h3>Purchase persistence</h3><p>saucedemo.com · Synthetic reference environment</p></div>
-              <small>Runnable now</small>
-            </article>
-            {journeys.map((journey) => (
-              <article className="journeyListItem" key={journey.id}>
-                <div><span className="reviewStatus" data-status={journey.status}>{journey.status === "DRAFT_REVIEW" ? "IN REVIEW" : journey.status}</span><h3>{journey.name}</h3><p>{journey.environment.hostname} · {journey.environment.name}</p></div>
-                <small>{journey.runnable ? "Runnable now" : `Version ${journey.currentVersion}`}</small>
-              </article>
-            ))}
-            {journeys.length === 0 && <p className="emptyHint">Your first submitted journey will appear here with its review status.</p>}
-          </section>
-        </div>
-
-        <section className="sectionDivider"><p className="eyebrow">Approved execution</p><h2>Run a live reference journey</h2><p>This allowlisted journey proves the complete FlowProof path: authenticated request, durable Solari execution, persisted result, and private evidence.</p></section>
-        <RunConsole />
-
-        {runnableJourneys.length > 0 ? <section className="sectionDivider"><p className="eyebrow">Customer execution</p><h2>Run your approved journeys</h2><p>Each journey below is bound to the exact domain, assertion, timeout, and read-only policy approved by FlowProof.</p></section> : null}
-        {runnableJourneys.map((journey) => <RunConsole journey={journey} key={journey.id} />)}
+        {journeys.some((journey) => !journey.runnable) ? <section className="pendingJourneys" aria-labelledby="pending-title">
+          <div className="dashboardSectionHeading"><div><p className="eyebrow">Pending</p><h2 id="pending-title">In review</h2></div></div>
+          {journeys.filter((journey) => !journey.runnable).map((journey) => <article className="journeyListItem" key={journey.id}><div><span className="reviewStatus" data-status={journey.status}>{journey.status === "DRAFT_REVIEW" ? "IN REVIEW" : journey.status}</span><h3>{journey.name}</h3><p>{journey.environment.hostname}</p></div><small>Version {journey.currentVersion}</small></article>)}
+        </section> : null}
 
         <section className="historyCard" aria-labelledby="history-title">
-          <div className="panelHeading"><div><p className="eyebrow">Audit trail</p><h2 id="history-title">Recent runs</h2></div><span>Last 10</span></div>
-          {recentRuns.length > 0 ? <div className="historyList">{recentRuns.map((run) => (
+          <div className="panelHeading"><div><p className="eyebrow">Activity</p><h2 id="history-title">Recent runs</h2></div><span>Latest 5</span></div>
+          {recentRuns.length > 0 ? <div className="historyList">{recentRuns.slice(0, 5).map((run) => (
             <article key={run.id}>
               <div><strong>{run.journeyName}</strong><span>{new Date(run.createdAt).toLocaleString()}</span></div>
               <span className="status" data-outcome={run.outcome ?? "INCONCLUSIVE"}>{run.outcome ?? run.state}</span>

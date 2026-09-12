@@ -79,6 +79,18 @@ Emil Kowalski's public design-engineering guidance without copying visual brandi
 - Use sentence case, specific language, asymmetrical composition, and generous
   empty space so the page feels authored rather than assembled from a template.
 
+### Dashboard focus
+
+- The default dashboard answers three questions: what can I run, what needs my
+  attention, and what happened recently.
+- Creation forms stay collapsed until the customer asks to add a journey.
+- Approved journeys own the main visual region and keep their run action visible.
+  Contract details remain available through progressive disclosure.
+- Show no more than five recent runs on the overview. A full audit history belongs
+  on a dedicated history surface when that feature is introduced.
+- Operational explanations appear at the point of action, not as repeated section
+  introductions.
+
 ### Outcome card
 
 - Start with the decision: PASS, FAIL, or INCONCLUSIVE.

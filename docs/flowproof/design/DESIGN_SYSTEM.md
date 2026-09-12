@@ -67,6 +67,18 @@ Emil Kowalski's public design-engineering guidance without copying visual brandi
 - The brand returns to the public site, while the primary product action opens
   the dashboard.
 
+### Public page restraint
+
+- The landing page answers only four questions: what is wrong, what FlowProof
+  does, how it works, and what the visitor should do next.
+- Detailed outcome taxonomy, roadmap, objections, and operating boundaries live
+  in product documentation or the authenticated product, not in the primary
+  sales narrative.
+- Prefer one strong sentence and one concrete proof artifact over grids of
+  interchangeable feature cards.
+- Use sentence case, specific language, asymmetrical composition, and generous
+  empty space so the page feels authored rather than assembled from a template.
+
 ### Outcome card
 
 - Start with the decision: PASS, FAIL, or INCONCLUSIVE.
